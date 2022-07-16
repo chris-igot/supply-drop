@@ -1,14 +1,14 @@
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
 
-.flex{
+.flex {
     display: flex;
 }
 
-.align-center{
+.align-center {
     align-items: center;
 }
 
-.nav{
+.nav {
     background-color: #ffff;
     padding: 10px 15px;
     margin-bottom: 15px;
@@ -19,14 +19,14 @@
     /* background-image: linear-gradient(to bottom right, #96ccec, #e3ec96); */
 }
 
-.nav h1{
+.nav h1 {
     font-size: 2.2em;
     margin-right: 10px;
     font-weight: 600;
     cursor: default;
 }
 
-.nav button{
+.nav button {
     margin: 0 10px;
 }
 
@@ -39,52 +39,53 @@
     cursor: pointer;
 }
 
-.nav a:hover{
+.nav a:hover {
     text-decoration: underline;
-    color: #D89859;
+    color: #d89859;
     transition: 0.3s;
 }
 
-.no-border{
+.no-border {
     border: none !important;
 }
 
-.nav input[type=text]{
+.nav input[type='text'] {
     border-radius: 50px;
     height: min-content;
     padding: 5px 10px;
     border: 2px solid #0b343d;
 }
 
-.nav input[type=text]:focus{
+.nav input[type='text']:focus {
     outline: none;
 }
 
-.title-search{
+.title-search {
     flex: 1;
-} 
+}
 
 .title-logo {
-    color: #5690C3;
+    color: #5690c3;
     font-family: 'Bebas Neue';
 }
 
 .gold {
-    color: #D89859;
+    color: #d89859;
 }
 
 .supply-drop-logo {
     height: 35px;
-    padding-bottom: 5px;
-    padding-right: 20px;
+    margin-top: 5px;
+    /* padding-bottom: 5px;
+    padding-right: 20px; */
 }
 
-.user {
+/* .user {
     font-size: 18px;
-    background-color: #F0F2F5;
+    background-color: #f0f2f5;
     padding: 5px;
     border-radius: 5px;
-}
+} */
 
 .username {
     font-style: italic;

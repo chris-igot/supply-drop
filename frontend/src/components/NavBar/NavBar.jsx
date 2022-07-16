@@ -1,11 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Link, useNavigate } from 'react-router-dom';
-import Logout from '../Logout/Logout';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
+
 import './NavBar.css';
 import logo from './logo.webp';
+import {
+    AppBar,
+    Box,
+    Button,
+    Divider,
+    Toolbar,
+    Typography,
+} from '@mui/material';
 const NavBar = () => {
-    const [user, setUser] = useState();
+    const navigate = useNavigate();
+    const [user, setUser] = useState({ firstName: '' });
 
     useEffect(() => {
         axios
@@ -17,34 +26,103 @@ const NavBar = () => {
     }, []);
 
     return (
-        <div className="nav flex align-center">
-            <div className="flex align-center">
-                <h1 className="title-logo">
-                    Supply <span className="gold">Drop</span>
-                </h1>
-                <img src={logo} alt="" srcset="" className="supply-drop-logo" />
-            </div>
-            <div className="flex align-center">
-                <Link to="/" className="no-border">
-                    Home
-                </Link>
+        <AppBar component="nav">
+            <Toolbar>
+                <Typography
+                    component="div"
+                    sx={{
+                        paddingInline: '1rem',
+                        backgroundColor: 'white',
+                        borderRadius: '50rem',
+                    }}
+                >
+                    <Typography
+                        variant="h4"
+                        component="span"
+                        sx={{ color: '#5690C3', fontFamily: 'Bebas Neue' }}
+                    >
+                        Supply
+                    </Typography>{' '}
+                    <Typography
+                        variant="h4"
+                        component="span"
+                        sx={{ color: '#D89859', fontFamily: 'Bebas Neue' }}
+                    >
+                        Drop
+                    </Typography>
+                    <img
+                        src={logo}
+                        alt=""
+                        srcset=""
+                        className="supply-drop-logo"
+                    />
+                </Typography>
+                <Typography component="span" sx={{ paddingLeft: '1rem' }}>
+                    Hello,{' '}
+                    <span className="username">
+                        {user.firstName} {user.lastName}
+                    </span>
+                </Typography>
+                <Divider
+                    sx={{
+                        flexGrow: 1,
+                        display: { xs: 'none', sm: 'block' },
+                        visibility: 'hidden',
+                    }}
+                />
+                <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
+                    <Button
+                        component={RouterLink}
+                        to="/"
+                        sx={{ color: 'white' }}
+                    >
+                        Home
+                    </Button>
+                    {user && (
+                        <Button
+                            component={RouterLink}
+                            to={`/account/${user._id}`}
+                            sx={{ color: 'white' }}
+                        >
+                            Account
+                        </Button>
+                    )}
+                    {user ? (
+                        <>
+                            <Button
+                                variant="outlined"
+                                sx={{
+                                    color: 'white',
+                                    borderColor: 'white',
+                                }}
+                                onClick={(e) => {
+                                    e.preventDefault();
 
-                {user && <Link to={`/account/${user._id}`}>Account</Link>}
-                {user ? (
-                    <div className="logged flex align-center">
-                        <Logout />
-                        <p className="user">
-                            Hello,{' '}
-                            <span className="username">
-                                {user.firstName} {user.lastName}
-                            </span>
-                        </p>
-                    </div>
-                ) : (
-                    <Link to="/login">Login</Link>
-                )}
-            </div>
-        </div>
+                                    axios
+                                        .post(
+                                            'http://localhost:8000/api/user/logout',
+                                            {},
+                                            { withCredentials: true }
+                                        )
+                                        .then((res) => {
+                                            console.log(res);
+                                            navigate('/login');
+                                            console.log('you are logged out');
+                                        })
+                                        .catch((err) => console.log(err));
+                                }}
+                            >
+                                Logout
+                            </Button>
+                        </>
+                    ) : (
+                        <Button component={RouterLink} to="/login">
+                            Login
+                        </Button>
+                    )}
+                </Box>
+            </Toolbar>
+        </AppBar>
     );
 };
 
