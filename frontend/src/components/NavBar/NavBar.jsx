@@ -14,7 +14,7 @@ import {
 } from '@mui/material';
 const NavBar = () => {
     const navigate = useNavigate();
-    const [user, setUser] = useState({ firstName: '' });
+    const [user, setUser] = useState();
 
     useEffect(() => {
         axios
@@ -57,12 +57,14 @@ const NavBar = () => {
                         className="supply-drop-logo"
                     />
                 </Typography>
-                <Typography component="span" sx={{ paddingLeft: '1rem' }}>
-                    Hello,{' '}
-                    <span className="username">
-                        {user.firstName} {user.lastName}
-                    </span>
-                </Typography>
+                {user && (
+                    <Typography component="span" sx={{ paddingLeft: '1rem' }}>
+                        Hello,{' '}
+                        <span className="username">
+                            {user.firstName} {user.lastName}
+                        </span>
+                    </Typography>
+                )}
                 <Divider
                     sx={{
                         flexGrow: 1,
@@ -116,7 +118,15 @@ const NavBar = () => {
                             </Button>
                         </>
                     ) : (
-                        <Button component={RouterLink} to="/login">
+                        <Button
+                            variant="outlined"
+                            component={RouterLink}
+                            to="/login"
+                            sx={{
+                                color: 'white',
+                                borderColor: 'white',
+                            }}
+                        >
                             Login
                         </Button>
                     )}
