@@ -96,20 +96,10 @@ const HomePosts = (props) => {
                                     {post.postedBy.lastName}
                                 </Typography>
                                 <Typography
-                                    component="h6"
-                                    sx={{
-                                        position: 'relative',
-                                        fontSize: '13px',
-                                    }}
+                                    component="h4"
+                                    sx={{ fontWeight: 800 }}
                                 >
-                                    <PinDrop
-                                        sx={{
-                                            position: 'relative',
-                                            top: '3px',
-                                            fontSize: '16px',
-                                        }}
-                                    />
-                                    {post.location}
+                                    {post.title}
                                 </Typography>
                             </Grid>
                             <Grid item xs={2}>
@@ -139,10 +129,20 @@ const HomePosts = (props) => {
                                 }
                             >
                                 <Typography
-                                    component="h4"
-                                    sx={{ fontWeight: 800 }}
+                                    component="h6"
+                                    sx={{
+                                        position: 'relative',
+                                        fontSize: '13px',
+                                    }}
                                 >
-                                    {post.title}
+                                    <PinDrop
+                                        sx={{
+                                            position: 'relative',
+                                            top: '3px',
+                                            fontSize: '16px',
+                                        }}
+                                    />
+                                    {post.location}
                                 </Typography>
                             </Grid>
                             <Grid item xs={2}>
@@ -176,26 +176,6 @@ const HomePosts = (props) => {
                             </Grid>
                             <Grid item xs={12}>
                                 <Divider />
-                            </Grid>
-                            <Grid
-                                item
-                                xs={12}
-                                sx={{ cursor: 'pointer' }}
-                                onClick={() =>
-                                    embiggenComponent(index, true, 'post')
-                                }
-                            >
-                                {post.image ? (
-                                    <img
-                                        src={
-                                            'http://localhost:8000/img/' +
-                                            post.image
-                                        }
-                                        alt={post.title}
-                                    />
-                                ) : (
-                                    <></>
-                                )}
                             </Grid>
                             <Grid
                                 item
