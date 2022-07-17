@@ -1,13 +1,12 @@
-import React from "react";
+import React from 'react';
 import NavBar from '../../components/NavBar/NavBar';
-
-import UserLogin from "../../components/LoginForm/UserLogin";
+import UserForm from '../../components/UserForm/UserForm';
 
 const Login = (props) => {
     return (
-        <div>
+        <div style={{ marginTop: '5rem' }}>
             <NavBar />
-            <UserLogin/>
+            <UserForm mode="login" />
         </div>
     );
 };

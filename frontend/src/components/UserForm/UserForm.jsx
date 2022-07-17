@@ -1,17 +1,24 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { Button, Container, Grid, Paper, Typography } from '@mui/material';
+import logo from '../NavBar/logo.webp';
+import TextField from '../Forms/TextField';
+import { useRef } from 'react';
 
-function UserForm({ mode }) {
+const UserForm = React.forwardRef(({ mode, ...props }, ref) => {
     const navigate = useNavigate();
     const [errors, setErrors] = useState({});
-    const [user, setUser] = useState({});
+    const [modeState, setModeState] = useState(mode);
+    const [OkToRender, setOkToRender] = useState(false);
+    const userRef = useRef({});
 
     useEffect(() => {
-        console.log({ mode });
-        switch (mode) {
+        switch (modeState) {
+            case 'login':
             case 'registration':
+                setOkToRender(true);
                 break;
             case 'edit':
                 axios
@@ -19,13 +26,12 @@ function UserForm({ mode }) {
                         withCredentials: true,
                     })
                     .then((res) => {
-                        setUser(res.data);
-                        console.log(res.data);
+                        userRef.current = res.data;
+                        // setUser(res.data);
+                        setOkToRender(true);
                     })
                     .catch((err) => console.log(err));
-
                 break;
-
             default:
                 return;
         }
@@ -38,15 +44,23 @@ function UserForm({ mode }) {
         let data = new URLSearchParams();
 
         inputs.forEach((input) => {
-            data.append(input.name, input.value);
+            if (
+                input.value &&
+                typeof input.value === 'string' &&
+                input.value.length > 0
+            ) {
+                data.append(input.name, input.value);
+            }
         });
 
-        switch (mode) {
+        switch (modeState) {
             case 'register':
                 url = 'http://localhost:8000/api/user/register';
 
                 axios
-                    .post(url, data)
+                    .post(url, data, {
+                        withCredentials: true,
+                    })
                     .then((res) => {
                         navigate('/');
                     })
@@ -61,10 +75,12 @@ function UserForm({ mode }) {
                     });
                 break;
             case 'edit':
-                url = `http://localhost:8000/api/user/${user._id}`;
+                url = `http://localhost:8000/api/user/${userRef.current._id}`;
 
                 axios
-                    .put(url, data)
+                    .put(url, data, {
+                        withCredentials: true,
+                    })
                     .then((res) => {
                         navigate('/');
                     })
@@ -79,6 +95,19 @@ function UserForm({ mode }) {
                     });
 
                 break;
+            case 'login':
+                axios
+                    .post('http://localhost:8000/api/user/login', data, {
+                        withCredentials: true,
+                    })
+
+                    .then((res) => {
+                        navigate('/');
+                    })
+                    .catch((err) => {
+                        setErrors({ password: 'Bad email or password' });
+                    });
+                break;
             default:
                 break;
         }
@@ -87,96 +116,197 @@ function UserForm({ mode }) {
     const renderErrorMessage = (name) =>
         errors[name] && <div className="error">{errors[name]}</div>;
 
-    function FormField({ name, label, type, defaultValue }) {
+    function renderHeader(mode) {
+        let bigText = '';
+
+        switch (mode) {
+            case 'register':
+                bigText = 'Registration';
+                break;
+            case 'edit':
+                bigText = 'Your Account Information';
+                break;
+            case 'login':
+                bigText = 'Login';
+                break;
+            default:
+                break;
+        }
+
         return (
-            <div>
-                <label htmlFor={name}>{label}</label>
-                <input
-                    type={type || 'text'}
-                    name={name}
-                    id={name}
-                    defaultValue={defaultValue || ''}
-                />
-            </div>
+            <Typography
+                variant="h3"
+                component="h3"
+                sx={{
+                    marginBottom: '1rem',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    fontFamily: 'Bebas Neue',
+                    color: '#5690C3',
+                }}
+            >
+                {bigText}
+                <img src={logo} alt="" srcSet="" className="supply-drop-logo" />
+            </Typography>
+        );
+    }
+
+    function renderSubmitButton(mode) {
+        let text = '';
+
+        switch (mode) {
+            case 'register':
+                text = 'Register';
+                break;
+            case 'edit':
+                text = 'Change Account Info';
+                break;
+            case 'login':
+                text = 'Login';
+                break;
+            default:
+                break;
+        }
+
+        return (
+            <Button
+                type="submit"
+                variant="contained"
+                sx={{ width: '100%', marginTop: '1rem' }}
+            >
+                {text}
+            </Button>
         );
     }
 
     return (
-        <div className='user-form'>
-            {mode==='register'?
-            <div>
-                <h1 className='title-logo'>Register <span className='gold'>Here</span></h1>
-                <h2>Already have an account? <Link to="/login">Login here</Link>.</h2>
-            </div>
-            :
-            <div>
-                <h1 className='title-logo'>Edit <span className='gold'>Account</span></h1>
-                <h2>All fields required.</h2>
-            </div>}
+        <Container
+            component={Paper}
+            elevation={3}
+            maxWidth={'sm'}
+            sx={{
+                position: 'absolute',
+                padding: '1rem',
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, -50%) scale(1)',
+            }}
+        >
             <form onSubmit={handleSubmit}>
-            {(mode === 'register' || mode === 'edit') && (
-                <>
-                    <div className='user-input-div'>
-                        <FormField
-                            name={'firstName'}
-                            label={'First Name:'}
-                            defaultValue={user.firstName || ''}
-                        />
-                        </div>
-                    {renderErrorMessage('firstName')}
-                    <div className='user-input-div'>
-                        <FormField
-                            name={'lastName'}
-                            label={'Last Name:'}
-                            defaultValue={user.lastName || ''}
-                        />
-                    </div>
-                    {renderErrorMessage('lastName')}
-                    <div className='user-input-div'>
-                        <FormField
-                            name={'username'}
-                            label={'Username:'}
-                            defaultValue={user.username || ''}
-                        />
-                    </div>
-                    {renderErrorMessage('username')}
-                </>
-            )}
-            <div className='user-input-div'>
-                <FormField
-                    name={'email'}
-                    label={'Email:'}
-                    defaultValue={user.email || ''}
-                />
-            </div>
-            {renderErrorMessage('email')}
-            <div className='user-input-div'>
-                <FormField
-                    name={'password'}
-                    label={'Password:'}
-                    type={'password'}
-                    defaultValue={user.password || ''}
-                />
-            </div>
-            {renderErrorMessage('password')}
-            <div className='user-input-div'>
-                <FormField
-                    name={'confirmPassword'}
-                    label={'Confirm Password:'}
-                    type={'password'}
-                />
-            </div>
-            {renderErrorMessage('confirmPassword')}
-            <div className="button-container">
-                {mode==='register'?
-                <input type="submit" value="Register" />
-                :
-                <input type="submit" value="Submit" />}
-            </div>
-            {mode==='register'&&<p>*Accounts aren't necessary to view posts*</p>}
-        </form>
-        </div>
-    );
-}
+                <Grid container>
+                    <Grid item xs={12}>
+                        {renderHeader(modeState)}
+                    </Grid>
 
+                    <Grid item xs={12}>
+                        <TextField
+                            OkToRender={
+                                OkToRender &&
+                                (modeState === 'register' ||
+                                    modeState === 'edit')
+                            }
+                            name={'firstName'}
+                            label={'First Name'}
+                            defaultValue={
+                                userRef.current.firstName || undefined
+                            }
+                            errorMessage={renderErrorMessage('firstName')}
+                        />
+                        <TextField
+                            OkToRender={
+                                OkToRender &&
+                                (modeState === 'register' ||
+                                    modeState === 'edit')
+                            }
+                            name={'lastName'}
+                            label={'Last Name'}
+                            defaultValue={userRef.current.lastName || undefined}
+                            errorMessage={renderErrorMessage('lastName')}
+                        />
+                        <TextField
+                            OkToRender={
+                                OkToRender &&
+                                (modeState === 'register' ||
+                                    modeState === 'edit')
+                            }
+                            name={'username'}
+                            label={'Username'}
+                            defaultValue={userRef.current.username || undefined}
+                            errorMessage={renderErrorMessage('username')}
+                        />
+                        <TextField
+                            OkToRender={OkToRender}
+                            name={'email'}
+                            label={'Email'}
+                            defaultValue={userRef.current.email || undefined}
+                            errorMessage={renderErrorMessage('email')}
+                        />
+                        <TextField
+                            OkToRender={OkToRender}
+                            name={'password'}
+                            label={'Password'}
+                            type={'password'}
+                            errorMessage={renderErrorMessage('password')}
+                        />
+                        <TextField
+                            OkToRender={
+                                modeState === 'register' || modeState === 'edit'
+                            }
+                            name={'confirmPassword'}
+                            label={'Confirm Password'}
+                            type={'password'}
+                            errorMessage={renderErrorMessage('confirmPassword')}
+                        />
+                    </Grid>
+
+                    {(modeState === 'register' || modeState === 'login') && (
+                        <Grid
+                            item
+                            xs={12}
+                            sx={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                justifyContent: 'center',
+                                marginBottom: '1rem',
+                            }}
+                        >
+                            <Typography variant="caption">
+                                {modeState === 'register' && (
+                                    <>
+                                        Already have an account?{' '}
+                                        <Button
+                                            onClick={() =>
+                                                setModeState('login')
+                                            }
+                                        >
+                                            Login
+                                        </Button>
+                                    </>
+                                )}
+                                {modeState === 'login' && (
+                                    <>
+                                        Haven't made an account yet?{' '}
+                                        <Button
+                                            onClick={() =>
+                                                setModeState('register')
+                                            }
+                                        >
+                                            Create a new account
+                                        </Button>
+                                    </>
+                                )}
+                            </Typography>
+                            <Typography variant="caption">
+                                Note: Accounts are NOT necessary to view posts
+                            </Typography>
+                        </Grid>
+                    )}
+                    <Grid item xs={12}>
+                        {renderSubmitButton(modeState)}
+                    </Grid>
+                </Grid>
+            </form>
+        </Container>
+    );
+});
 export default UserForm;
