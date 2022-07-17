@@ -1,8 +1,16 @@
 import React from 'react';
 import './post.css';
-import locationLogo from './location.png';
-import xLogo from './x.png';
+
 import StartChat from '../Chat/StartChat';
+import {
+    Divider,
+    Grid,
+    ImageList,
+    ImageListItem,
+    Paper,
+    Typography,
+} from '@mui/material';
+import { Close } from '@mui/icons-material';
 
 function Post({
     postType,
@@ -16,70 +24,80 @@ function Post({
     index,
 }) {
     return (
-        <div className="post-container">
-            <div className="post">
-                <div>
-                    <div className="post-head-container">
-                        <h5 className="title">{title}</h5>
-                        <img
-                            src={xLogo}
-                            alt=""
-                            srcSet=""
-                            onClick={() => {
-                                embiggenPost(index, false, 'post');
-                            }}
-                            className="x"
-                        />
-                    </div>
-                    <img
-                        src={locationLogo}
-                        alt=""
-                        srcSet=""
-                        className="locationImage"
+        <Paper
+            elevation={3}
+            sx={{
+                padding: '1rem',
+                position: 'absolute',
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)',
+            }}
+        >
+            <Grid container>
+                <Grid item xs={10}>
+                    <Typography component="h4" sx={{ fontWeight: 800 }}>
+                        {title}
+                    </Typography>
+                </Grid>
+                <Grid item xs={2}>
+                    <Close
+                        sx={{ float: 'right', cursor: 'pointer' }}
+                        onClick={() => {
+                            embiggenPost(index, false, 'post');
+                        }}
                     />
-                    <span className="location">{location}</span>
-
-                    <p className="description">{description}</p>
-                </div>
-                <div>
-                    <div className="image">
-                        {image ? (
-                            <img
-                                src={'http://localhost:8000/img/' + image}
-                                alt={title}
-                            />
-                        ) : (
-                            <span>no image</span>
-                        )}
-                    </div>
-                    <div className="bottom">
-                        {/* <form action="" className="email">
-                            <h1 className='title'>Send a Message {postedBy.firstName} {postedBy.lastName}</h1>
-                            <label htmlFor="name">Name</label>
-                            <input type="text" name="name"  required/>
-                            <label htmlFor="name" className='padding'>Email</label>
-                            <input type="email" name="email"  required/>
-                            <label htmlFor="message" className='padding'>Your Message</label>
-                            <textarea name="message" id="" cols="30" rows="4"></textarea>
-                        <div className='padding'>
-                            <button type="submit">Send</button>
-                        </div>
-                        </form> */}
-                        <StartChat recipientId={postedBy._id} />
-
-                        <iframe
-                            title="googlemap"
-                            width="300"
-                            height="300"
-                            loading="lazy"
-                            allowFullScreen
-                            referrerPolicy="no-referrer-when-downgrade"
-                            src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyDUbRiOy26TfHguvbRi-9XsLa_oRNvQ_fY&q=${location}`}
-                        ></iframe>
-                    </div>
-                </div>
-            </div>
-        </div>
+                </Grid>
+                <Grid item xs={12}>
+                    <Divider sx={{ marginTop: '8px', marginBottom: '8px' }} />
+                </Grid>
+                <Grid item xs={12}>
+                    {image && (
+                        <ImageList
+                            cols={4}
+                            rowHeight={150}
+                            sx={{ width: '100%', height: 150 }}
+                        >
+                            <ImageListItem>
+                                <img
+                                    style={{ objectFit: 'cover' }}
+                                    src={'http://localhost:8000/img/' + image}
+                                    alt={title}
+                                />
+                            </ImageListItem>
+                        </ImageList>
+                    )}
+                    <Divider sx={{ marginTop: '8px', marginBottom: '0' }} />
+                    <Typography variant="overline" component="h6">
+                        Description
+                    </Typography>
+                    <Typography component="p">{description}</Typography>
+                </Grid>
+                <Grid item xs={12}>
+                    <Divider sx={{ marginTop: '8px', marginBottom: '0' }} />
+                </Grid>
+                <Grid item xs={6}>
+                    <Typography variant="overline" component="h6">
+                        Chat
+                    </Typography>
+                    <StartChat recipientId={postedBy._id} />
+                </Grid>
+                <Grid item xs={6}>
+                    <Typography variant="overline" component="h6">
+                        Location
+                    </Typography>
+                    <iframe
+                        title="googlemap"
+                        width="100%"
+                        height="300"
+                        loading="lazy"
+                        allowFullScreen
+                        referrerPolicy="no-referrer-when-downgrade"
+                        src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyDUbRiOy26TfHguvbRi-9XsLa_oRNvQ_fY&q=${location}`}
+                    ></iframe>
+                </Grid>
+            </Grid>
+        </Paper>
     );
 }
 
