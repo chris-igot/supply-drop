@@ -1,13 +1,17 @@
 import axios from 'axios';
-import React, { useEffect, useState, useRef } from 'react';
-import './HomePosts.css';
+import React, { useEffect, useState } from 'react';
 import Post from '../Post/Post';
 import PostForm from '../PostForm';
-import editLogo from './edit.png';
-import trashLogo from './trash.png';
-import locationLogo from './location.png';
-import { useNavigate } from 'react-router-dom';
-
+import { Edit, DeleteForever, PinDrop } from '@mui/icons-material';
+import {
+    Box,
+    Chip,
+    Divider,
+    Grid,
+    Paper,
+    Stack,
+    Typography,
+} from '@mui/material';
 
 const HomePosts = (props) => {
     const [posts, setPosts] = useState([]);
@@ -25,6 +29,7 @@ const HomePosts = (props) => {
                 console.log(err);
                 updatePosts();
             });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const updatePosts = () => {
@@ -40,8 +45,8 @@ const HomePosts = (props) => {
 
                 if (id) {
                     data = data.filter(function (props) {
-                        return props.postedBy._id === id
-                    })
+                        return props.postedBy._id === id;
+                    });
                 }
 
                 setPosts(data);
@@ -77,120 +82,152 @@ const HomePosts = (props) => {
     };
 
     return (
-        <div>
-            {
-                <div>
-                    {posts.map((post, index) => (
-                        <React.Fragment key={post._id}>
-                            <div className='post-contain'>
-                            <div
-                                
-                                onClick={() => {
-                                    console.log('\nparent');
-                                    embiggenComponent(index, true, 'post');
-                                }}
+        <>
+            {posts.map((post, index) => (
+                <React.Fragment key={index}>
+                    <Paper sx={{ padding: '1rem' }}>
+                        <Grid container>
+                            <Grid item xs={10}>
+                                <Typography
+                                    component="p"
+                                    sx={{ fontStyle: 'italic' }}
+                                >
+                                    {post.postedBy.firstName}{' '}
+                                    {post.postedBy.lastName}
+                                </Typography>
+                                <Typography
+                                    component="h6"
+                                    sx={{
+                                        position: 'relative',
+                                        fontSize: '13px',
+                                    }}
+                                >
+                                    <PinDrop
+                                        sx={{
+                                            position: 'relative',
+                                            top: '3px',
+                                            fontSize: '16px',
+                                        }}
+                                    />
+                                    {post.location}
+                                </Typography>
+                            </Grid>
+                            <Grid item xs={2}>
+                                {/* <Chip>{post.postType}</Chip> */}
+                                <Chip
+                                    label={post.postType}
+                                    sx={{
+                                        padding: '4px 0 0 1px',
+                                        float: 'right',
+                                        fontSize: '18px',
+                                        fontFamily: 'Bebas Neue',
+                                        color: 'white',
+                                        backgroundColor:
+                                            post.postType === 'offering'
+                                                ? '#EE9C4A'
+                                                : '#5690C3',
+                                    }}
+                                />
+                                {/* {post.postType} */}
+                            </Grid>
+                            <Grid
+                                item
+                                xs={10}
+                                sx={{ cursor: 'pointer' }}
+                                onClick={() =>
+                                    embiggenComponent(index, true, 'post')
+                                }
                             >
-
-                                    <div className='post-header'>
-                                        <div className="sub-header">
-                                        <div className="sub-header-name">
-                                        {!id &&
-                                        <h6 className="name">{post.postedBy.firstName} {post.postedBy.lastName}</h6>
-                                        }
-                                        </div>
-                                        <div className="sub-head-post-type">
-                                        {post.postType === "offering" ? 
-                                            <div>
-                                                <p className='post-type-spacing' style={{color:"#ee9c4a"}}>{post.postType}</p>
-                                            </div>
-                                            : 
-                                            <div>
-                                                <p className='post-type-spacing' style={{color:"#5690c3"}}>{post.postType}</p>
-                                            </div>}
-                                        </div>
-                                        </div>
-                                    <h5 className="title">{post.title}</h5>
-                                    <div className="location-container">
-                                        <img
-                                            src={locationLogo}
-                                            alt=""
-                                            srcSet=""
-                                            className="locationImage"
+                                <Typography
+                                    component="h4"
+                                    sx={{ fontWeight: 800 }}
+                                >
+                                    {post.title}
+                                </Typography>
+                            </Grid>
+                            <Grid item xs={2}>
+                                {post.postedBy._id === user._id && (
+                                    <Box>
+                                        <Edit
+                                            onClick={() => {
+                                                embiggenComponent(
+                                                    index,
+                                                    true,
+                                                    'edit'
+                                                );
+                                            }}
+                                            sx={{
+                                                float: 'right',
+                                                cursor: 'pointer',
+                                            }}
                                         />
-                                        <p className="location">
-                                            {post.location}
-                                        </p>
-                                        </div>
-                                </div>
-                            </div>
-                                    <div className="display-flex-center">
-                                        {post.image ? (
-                                            <img
-                                                src={
-                                                    'http://localhost:8000/img/' +
-                                                    post.image
-                                                }
-                                                alt={post.title}
-                                            />
-                                        ) : (
-                                            <span>no image</span>
-                                        )}
-                                    </div>
-                                <div className="post-description">
-                                {!id &&
-                                            <div className="description">
-                                                {post.description}
-                                            </div>
-                                        }
-                                </div>
 
-                            {post.postedBy._id === user._id && (
-                                <div className="edit-delete-container">
-                                  
-                                    <img
-                                        src={editLogo}
-                                        alt=""
-                                        srcSet=""
-                                        className="edit-trash"
-                                        onClick={() => {
-                                            embiggenComponent(
-                                                index,
-                                                true,
-                                                'edit'
-                                            );
-                                        }}
-                                    />
-                                    <img
-                                        src={trashLogo}
-                                        alt=""
-                                        srcSet=""
-                                        onClick={() => {
-                                            handleDelete(post._id);
-                                        }}
-                                        className="edit-trash"
-                                    />
-                                </div>
+                                        <DeleteForever
+                                            onClick={() => {
+                                                handleDelete(post._id);
+                                            }}
+                                            sx={{
+                                                float: 'right',
+                                                cursor: 'pointer',
+                                            }}
+                                        />
+                                    </Box>
                                 )}
-                            {post.bigEdit && (
-                                <PostForm
-                                    embiggenForm={embiggenComponent}
-                                    index={index}
-                                    postID={post._id}
-                                />
-                            )}
-                            {post.bigPost && (
-                                <Post
-                                    {...post}
-                                    embiggenForm={embiggenComponent}
-                                    index={index}
-                                />
-                            )}
-                            </div>
-                        </React.Fragment>
-                    ))}
-                </div>
-            }
-        </div>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <Divider />
+                            </Grid>
+                            <Grid
+                                item
+                                xs={12}
+                                sx={{ cursor: 'pointer' }}
+                                onClick={() =>
+                                    embiggenComponent(index, true, 'post')
+                                }
+                            >
+                                {post.image ? (
+                                    <img
+                                        src={
+                                            'http://localhost:8000/img/' +
+                                            post.image
+                                        }
+                                        alt={post.title}
+                                    />
+                                ) : (
+                                    <></>
+                                )}
+                            </Grid>
+                            <Grid
+                                item
+                                xs={12}
+                                sx={{ cursor: 'pointer' }}
+                                onClick={() =>
+                                    embiggenComponent(index, true, 'post')
+                                }
+                            >
+                                <Typography component="p">
+                                    {post.description}
+                                </Typography>
+                            </Grid>
+                        </Grid>
+                    </Paper>
+                    {post.bigEdit && (
+                        <PostForm
+                            embiggenForm={embiggenComponent}
+                            index={index}
+                            postID={post._id}
+                        />
+                    )}
+                    {post.bigPost && (
+                        <Post
+                            {...post}
+                            embiggenForm={embiggenComponent}
+                            index={index}
+                        />
+                    )}
+                </React.Fragment>
+            ))}
+        </>
     );
 };
 

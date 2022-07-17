@@ -1,18 +1,16 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import './Home.css';
-import { Link } from 'react-router-dom';
 import PostForm from '../../components/PostForm';
 import HomePosts from '../../components/HomePosts/HomePosts';
 import NavBar from '../../components/NavBar/NavBar';
 import logo from './logo.webp';
 import ChatList from '../../components/Chat/ChatList';
+import { Chip, Link, Paper, Stack } from '@mui/material';
 
 const Home = () => {
     const [user, setUser] = useState();
     const [bigForm, setBigForm] = useState(false);
-    const navigate = useNavigate();
 
     useEffect(() => {
         axios
@@ -24,10 +22,42 @@ const Home = () => {
     }, []);
 
     return (
-        <div>
+        <div style={{ paddingTop: '5rem' }}>
             <NavBar />
 
-            {user && (
+            <Stack spacing={2} sx={{ display: 'block' }}>
+                {user && (
+                    <Paper
+                        sx={{
+                            display: 'flex',
+                            padding: '0.25rem 0.75rem 0.25rem 0.25rem',
+                            alignItems: 'center',
+                        }}
+                    >
+                        <img
+                            src={logo}
+                            alt=""
+                            srcset=""
+                            className="supply-drop"
+                        />
+                        <Chip
+                            label="What can you offer/request?"
+                            sx={{
+                                flexGrow: 1,
+                                color: 'gray',
+                            }}
+                            onClick={(e) => {
+                                e.preventDefault();
+                                setBigForm(true);
+                            }}
+                        />
+                    </Paper>
+                )}
+
+                <HomePosts />
+            </Stack>
+
+            {/* {user && (
                 <div className="create-contain">
                     <div className="create">
                         <img
@@ -48,7 +78,7 @@ const Home = () => {
                         </a>
                     </div>
                 </div>
-            )}
+            )} */}
 
             {bigForm && (
                 <PostForm
@@ -59,11 +89,7 @@ const Home = () => {
                 />
             )}
 
-            <div className="display-flex-center">
-                <HomePosts />
-            </div>
-
-            {user && <ChatList userId={user._id} />}
+            {/* {user && <ChatList userId={user._id} />} */}
         </div>
     );
 };
