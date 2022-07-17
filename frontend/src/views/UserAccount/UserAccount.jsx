@@ -1,11 +1,11 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link as RouterLink, useParams } from 'react-router-dom';
 import HomePosts from '../../components/HomePosts/HomePosts';
 import NavBar from '../../components/NavBar/NavBar';
-import './UserAccount.css';
-import settingsPhoto from './settingsIcon.png';
 import ChatList from '../../components/Chat/ChatList';
+import { Button, Paper, Stack, Typography } from '@mui/material';
+import { Settings } from '@mui/icons-material';
 
 const UserDetail = (props) => {
     const [user, setUser] = useState();
@@ -33,41 +33,42 @@ const UserDetail = (props) => {
 
     return (
         user && (
-            <div className="container">
-                <div className="row">
-                    <NavBar />
-                </div>
-                <div className="AccountHeader">
-                    <h3>{user.firstName}'s Posts</h3>
-                </div>
-                <div className="PostContainer">
-                    <div>
-                        <div className="AllEdit">
-                            <div className="EditText">
-                                <Link
-                                    style={{
-                                        textDecoration: 'none',
-                                        color: 'black',
-                                    }}
-                                    to={`/account/edit/${user._id}`}
-                                >
-                                    Edit Account
-                                </Link>
-                            </div>
-                            <div className="EditButton">
-                                <Link to={`/account/edit/${user._id}`}>
-                                    <img
-                                        src={settingsPhoto}
-                                        alt="settings icon"
-                                    />
-                                </Link>
-                            </div>
-                        </div>
-                        <HomePosts id={id} />
-                        <ChatList userId={id} />
-                    </div>
-                </div>
-            </div>
+            <>
+                <NavBar />
+
+                <Stack
+                    spacing={2}
+                    sx={{
+                        display: 'block',
+                        paddingTop: '5rem',
+                        paddingBottom: '1rem',
+                    }}
+                >
+                    <Paper
+                        elevation={5}
+                        sx={{
+                            display: 'flex',
+                            padding: '1rem',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                        }}
+                    >
+                        <Typography variant="h4" component="h2">
+                            Your Posts
+                        </Typography>
+                        <Button
+                            component={RouterLink}
+                            to={`/account/edit/${user._id}`}
+                            sx={{ float: 'right' }}
+                        >
+                            Edit Account
+                            <Settings />
+                        </Button>
+                    </Paper>
+                    <HomePosts id={id} />
+                </Stack>
+                <ChatList userId={id} />
+            </>
         )
     );
 };
