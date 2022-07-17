@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { Link as RouterLink, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import HomePosts from '../../components/HomePosts/HomePosts';
 import NavBar from '../../components/NavBar/NavBar';
 import ChatList from '../../components/Chat/ChatList';
