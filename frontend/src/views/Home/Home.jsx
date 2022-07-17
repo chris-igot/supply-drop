@@ -6,7 +6,7 @@ import HomePosts from '../../components/HomePosts/HomePosts';
 import NavBar from '../../components/NavBar/NavBar';
 import logo from './logo.webp';
 import ChatList from '../../components/Chat/ChatList';
-import { Chip, Link, Paper, Stack } from '@mui/material';
+import { Chip, Paper, Stack } from '@mui/material';
 
 const Home = () => {
     const [user, setUser] = useState();
@@ -57,29 +57,6 @@ const Home = () => {
                 <HomePosts />
             </Stack>
 
-            {/* {user && (
-                <div className="create-contain">
-                    <div className="create">
-                        <img
-                            src={logo}
-                            alt=""
-                            srcset=""
-                            className="supply-drop"
-                        />
-                        <a
-                            className="create-box"
-                            href="#newpost"
-                            onClick={(e) => {
-                                e.preventDefault();
-                                setBigForm(true);
-                            }}
-                        >
-                            What can you offer/request?
-                        </a>
-                    </div>
-                </div>
-            )} */}
-
             {bigForm && (
                 <PostForm
                     embiggenForm={(index, active) => {
@@ -89,7 +66,7 @@ const Home = () => {
                 />
             )}
 
-            {/* {user && <ChatList userId={user._id} />} */}
+            {user && <ChatList userId={user._id} />}
         </div>
     );
 };

@@ -3,15 +3,7 @@ import React, { useEffect, useState } from 'react';
 import Post from '../Post/Post';
 import PostForm from '../PostForm';
 import { Edit, DeleteForever, PinDrop } from '@mui/icons-material';
-import {
-    Box,
-    Chip,
-    Divider,
-    Grid,
-    Paper,
-    Stack,
-    Typography,
-} from '@mui/material';
+import { Box, Chip, Divider, Grid, Paper, Typography } from '@mui/material';
 
 const HomePosts = (props) => {
     const [posts, setPosts] = useState([]);
