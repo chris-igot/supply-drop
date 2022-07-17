@@ -18,7 +18,7 @@ import './PostForm.css';
 import AutoCompleteLocations from './AutocompleteLocations';
 import { Close } from '@mui/icons-material';
 
-const PostForm = (props) => {
+const PostForm = React.forwardRef((props, ref) => {
     const { userID, postID, embiggenForm, index } = props;
     const [postInfo, setPostInfo] = useState({});
     const [errors, setErrors] = useState('');
@@ -251,6 +251,6 @@ const PostForm = (props) => {
             </form>
         </Paper>
     );
-};
+});
 
 export default PostForm;

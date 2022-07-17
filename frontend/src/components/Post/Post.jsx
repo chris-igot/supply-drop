@@ -12,18 +12,21 @@ import {
 } from '@mui/material';
 import { Close } from '@mui/icons-material';
 
-function Post({
-    postType,
-    title,
-    description,
-    image,
-    location,
-    postedBy,
-    _id,
-    embiggenForm: embiggenPost,
-    index,
-}) {
-    return (
+const Post = React.forwardRef(
+    (
+        {
+            postType,
+            title,
+            description,
+            image,
+            location,
+            postedBy,
+            _id,
+            embiggenForm,
+            index,
+        },
+        ref
+    ) => (
         <Paper
             elevation={3}
             sx={{
@@ -44,7 +47,7 @@ function Post({
                     <Close
                         sx={{ float: 'right', cursor: 'pointer' }}
                         onClick={() => {
-                            embiggenPost(index, false, 'post');
+                            embiggenForm(index, false, 'post');
                         }}
                     />
                 </Grid>
@@ -98,7 +101,7 @@ function Post({
                 </Grid>
             </Grid>
         </Paper>
-    );
-}
+    )
+);
 
 export default Post;
