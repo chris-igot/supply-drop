@@ -4,7 +4,6 @@ import Login from './views/Login/Login';
 import Register from './views/Register/Register';
 import Home from './views/Home/Home';
 import View from './views/View/View';
-import AllPost from './views/AllPost/AllPost';
 import Logout from './components/Logout/Logout';
 import EditPost from './components/UpdatePosts/UpdatePosts';
 import UserDetail from './views/UserAccount/UserAccount';
@@ -21,7 +20,6 @@ function App() {
                         <Route path="/register" element={<Register />}></Route>
                         <Route path="/" element={<Home />}></Route>
                         <Route path="/create" element={<Home />}></Route>
-                        <Route path="/allposts" element={<AllPost />}></Route>
                         <Route path="/logout" element={<Logout />}></Route>
 
                         {/* IF YOU ARE DOING ACCOUNT PLZ CHANGE -> will be /account/id try to make id into the username if you can or not */}
