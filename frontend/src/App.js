@@ -3,7 +3,6 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Login from './views/Login/Login';
 import Register from './views/Register/Register';
 import Home from './views/Home/Home';
-import View from './views/View/View';
 import Logout from './components/Logout/Logout';
 import EditPost from './components/UpdatePosts/UpdatePosts';
 import UserDetail from './views/UserAccount/UserAccount';
@@ -32,8 +31,6 @@ function App() {
                             element={<EditUser />}
                         ></Route>
 
-                        {/* IF YOU ARE DOING VIEWS PLZ CHANGE -> will be /view/id or the name of the post or not*/}
-                        <Route path="/view" element={<View />}></Route>
                         <Route
                             path="/edit/post/:id"
                             element={<EditPost />}
