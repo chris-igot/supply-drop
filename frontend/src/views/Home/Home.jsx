@@ -6,7 +6,7 @@ import HomePosts from '../../components/HomePosts/HomePosts';
 import NavBar from '../../components/NavBar/NavBar';
 import logo from './logo.webp';
 import ChatList from '../../components/Chat/ChatList';
-import { Chip, Paper, Stack } from '@mui/material';
+import { Chip, Modal, Paper, Stack } from '@mui/material';
 
 const Home = () => {
     const [user, setUser] = useState();
@@ -22,7 +22,7 @@ const Home = () => {
     }, []);
 
     return (
-        <div style={{ paddingTop: '5rem' }}>
+        <div style={{ paddingTop: '5rem', paddingBottom: '1rem' }}>
             <NavBar />
 
             <Stack spacing={2} sx={{ display: 'block' }}>
@@ -57,13 +57,15 @@ const Home = () => {
                 <HomePosts />
             </Stack>
 
-            {bigForm && (
-                <PostForm
-                    embiggenForm={(index, active) => {
-                        setBigForm(active);
-                    }}
-                    userID={user._id}
-                />
+            {user && (
+                <Modal open={bigForm}>
+                    <PostForm
+                        embiggenForm={(index, active) => {
+                            setBigForm(active);
+                        }}
+                        userID={user._id || undefined}
+                    />
+                </Modal>
             )}
 
             {user && <ChatList userId={user._id} />}
