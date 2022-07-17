@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import axios from 'axios';
 import { Autocomplete, TextField } from '@mui/material';
 
-function AutoCompleteLocations({ setLocation, ...props }) {
+function AutoCompleteLocations({ setLocation, defaultValue, ...props }) {
     const timeRef = useRef(0);
     const [results, setResults] = useState([]);
 
@@ -29,7 +29,12 @@ function AutoCompleteLocations({ setLocation, ...props }) {
                 });
         }
 
-        if (event.type === 'keydown' && event.key === 'Enter' && setLocation) {
+        if (
+            event &&
+            event.type === 'keydown' &&
+            event.key === 'Enter' &&
+            setLocation
+        ) {
             setLocation(newInputValue);
         }
     }
@@ -37,6 +42,9 @@ function AutoCompleteLocations({ setLocation, ...props }) {
     return (
         <Autocomplete
             options={results}
+            openText="test open"
+            defaultValue={{ label: defaultValue || '', id: 'defaultid' }}
+            sx={{ marginBottom: '1rem' }}
             onInputChange={handleInputChange}
             renderInput={(params) => (
                 <TextField

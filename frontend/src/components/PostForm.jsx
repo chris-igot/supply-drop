@@ -1,30 +1,34 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { styled } from '@mui/material/styles';
-import { useNavigate } from 'react-router-dom';
-import TextField from '@mui/material/TextField';
-import Radio from '@mui/material/Radio';
-import RadioGroup from '@mui/material/RadioGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Button from '@mui/material/Button';
-import Input from '@mui/material';
-import { TextareaAutosize } from '@mui/material';
-import './PostForm/PostForm.css'
-import './PostForm.css'
-import x from './Post/x.png'
+import {
+    Button,
+    Chip,
+    Divider,
+    FormControlLabel,
+    Grid,
+    Paper,
+    Radio,
+    RadioGroup,
+    Typography,
+    TextField,
+} from '@mui/material';
+import './PostForm/PostForm.css';
+import './PostForm.css';
 import AutoCompleteLocations from './AutocompleteLocations';
+import { Close } from '@mui/icons-material';
 
 const PostForm = (props) => {
     const { userID, postID, embiggenForm, index } = props;
     const [postInfo, setPostInfo] = useState({});
     const [errors, setErrors] = useState('');
-    const navigate = useNavigate();
+    const [OkToRender, setOkToRender] = useState(false);
 
-    
     useEffect(() => {
         if (postID) {
             getPostInfo();
+        } else {
+            setOkToRender(true);
         }
     }, []);
 
@@ -35,6 +39,7 @@ const PostForm = (props) => {
                 { withCredentials: true }
             );
             setPostInfo(response.data);
+            setOkToRender(true);
         } catch (err) {
             console.log(err);
         }
@@ -74,7 +79,6 @@ const PostForm = (props) => {
             if (!data.has('postType')) {
                 data.append('postType', postInfo.postType);
             }
-            // data.append("postedBy", postInfo.postedBy);
             data.append('_id', postInfo._id);
 
             axios
@@ -112,90 +116,140 @@ const PostForm = (props) => {
     }
 
     return (
-        <div className="allcontain">
-            <form
-                className="flex post-form"
-                onSubmit={submitHandler}
-                method="post"
-            >
-
-                <div className='x-container'>
-                <img src={x} alt="" className='x-form' onClick={() => {
-                        embiggenForm(index, false, 'form');
-                    }}/>
-                </div>
-                {/* image container */}
-
-                <br />
-                {/* post information container */}
-                <div>
-                    <TextField
-                        name="title"
-                        label="What are you offering/requesting?"
-                        className="request-offer-title"
-                        defaultValue={postInfo.title || ''}
-                    />
-
-
-                    {/* radio button conditionals */}
-
-                    <div style={{ marginTop: '15px' }}>
-                        <label className="">What type of post is it?</label>
+        <Paper
+            elevation={3}
+            sx={{
+                padding: '1rem',
+                position: 'absolute',
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)',
+            }}
+        >
+            <form method="post" onSubmit={submitHandler}>
+                <Grid container>
+                    <Grid item xs={12}>
                         {postID ? (
-                            postInfo.postType || ''
+                            <Chip
+                                label={postInfo.postType || ''}
+                                sx={{
+                                    padding: '4px 0 0 1px',
+                                    float: 'left',
+                                    fontSize: '18px',
+                                    fontFamily: 'Bebas Neue',
+                                    color: 'white',
+                                    backgroundColor:
+                                        postInfo.postType === 'offering'
+                                            ? '#EE9C4A'
+                                            : '#5690C3',
+                                }}
+                            />
                         ) : (
+                            <Typography component="h3" sx={{ float: 'left' }}>
+                                New Post
+                            </Typography>
+                        )}
+                        <Close
+                            sx={{ float: 'right', cursor: 'pointer' }}
+                            onClick={() => {
+                                embiggenForm(index, false, 'postForm');
+                            }}
+                        />
+                    </Grid>
+                    <Grid item xs={12}>
+                        <Divider
+                            sx={{ marginTop: '8px', marginBottom: '8px' }}
+                        />
+                        {OkToRender && (
+                            <TextField
+                                id="title"
+                                name="title"
+                                label="Title"
+                                placeholder="What are you offering/requesting?"
+                                defaultValue={postInfo.title || ''}
+                                sx={{
+                                    width: '100%',
+                                    marginTop: '0.5rem',
+                                    marginBottom: '1rem',
+                                }}
+                            />
+                        )}
+
+                        {!postID && (
                             <>
-                                {' '}
-                                <div className="flex">
-                                    <RadioGroup
-                                        aria-labelledby="demo-radio-buttons-group-label"
-                                        defaultValue="offering"
-                                        name="postType"
-                                        id="offering"
-                                    >
-                                        <FormControlLabel value="offering" control={<Radio />} label="Offering" />
-                                        <FormControlLabel value="request" control={<Radio />} label="Request" />
-                                    </RadioGroup>
-                                </div>
+                                <Typography variant="overline" component="h6">
+                                    What type of post is it?
+                                </Typography>
+                                <RadioGroup
+                                    aria-labelledby="demo-radio-buttons-group-label"
+                                    defaultValue="offering"
+                                    name="postType"
+                                    id="offering"
+                                    sx={{ position: 'relative' }}
+                                >
+                                    <FormControlLabel
+                                        value="offering"
+                                        control={<Radio />}
+                                        label="Offering"
+                                        sx={{
+                                            position: 'relative',
+                                            top: -10,
+                                        }}
+                                    />
+                                    <FormControlLabel
+                                        value="request"
+                                        control={<Radio />}
+                                        label="Request"
+                                        sx={{
+                                            position: 'relative',
+                                            top: -20,
+                                        }}
+                                    />
+                                </RadioGroup>
                             </>
                         )}
-                    </div>
-                    <div style={{ marginTop: '15px' }}>
-                        <label className="" htmlFor="desc">
-                            Description of item(s):
-                        </label>
-                            <br />
-                        <TextareaAutosize
-                            minRows={3}
-                            maxRows={6}
-                            aria-label="maximum height"
-                            defaultValue={postInfo.description || ''}
+
+                        <TextField
+                            multiline
+                            id="description"
                             name="description"
-                            className="description-location-box"
+                            label="Description of item(s)"
+                            rows={4}
+                            placeholder="What are you offering/requesting?"
+                            defaultValue={postInfo.description || ''}
+                            sx={{ marginBottom: '1rem', width: '100%' }}
                         />
-                    </div>
-                    <div>
-                    <AutoCompleteLocations id="standard-basic" name="location" defaultValue={postInfo.location || ''} label="Location" variant="standard" className="description-location-box"/>
-                       
-                    </div>
-                </div>
-                {/* end post information container */}
-            {/* image container */}
-            <div className='post-form'>
-                <label className="" htmlFor="photo">
-                    Add a photo
-                </label>
-                <br />
-                <input
-                    type={'file'}
-                    accept=".png, .jpg, .jpeg"
-                    name="photo"
-                />
-            </div>
-            {/* end post container */}
-                    <Button style={{ marginTop: '10px' }} type="submit" variant="contained">Submit</Button>
+
+                        {OkToRender && (
+                            <AutoCompleteLocations
+                                id="location"
+                                name="location"
+                                defaultValue={postInfo.location}
+                                label="Location"
+                                variant="standard"
+                                className="description-location-box"
+                            />
+                        )}
+
+                        <Typography variant="overline" component="h6">
+                            Add a photo
+                        </Typography>
+                        <input
+                            type={'file'}
+                            accept=".png, .jpg, .jpeg"
+                            name="photo"
+                        />
+                        <Button
+                            style={{ marginTop: '1.5rem', width: '100%' }}
+                            type="submit"
+                            variant="contained"
+                        >
+                            Submit
+                        </Button>
+                    </Grid>
+                </Grid>
             </form>
-        </div>
+        </Paper>
     );
 };
 
