@@ -3,7 +3,15 @@ import React, { useEffect, useState } from 'react';
 import Post from '../Post/Post';
 import PostForm from '../PostForm';
 import { Edit, DeleteForever, PinDrop } from '@mui/icons-material';
-import { Box, Chip, Divider, Grid, Paper, Typography } from '@mui/material';
+import {
+    Box,
+    Chip,
+    Divider,
+    Grid,
+    Modal,
+    Paper,
+    Typography,
+} from '@mui/material';
 
 const HomePosts = (props) => {
     const [posts, setPosts] = useState([]);
@@ -203,20 +211,21 @@ const HomePosts = (props) => {
                             </Grid>
                         </Grid>
                     </Paper>
-                    {post.bigEdit && (
+                    <Modal open={post.bigEdit}>
                         <PostForm
                             embiggenForm={embiggenComponent}
                             index={index}
                             postID={post._id}
                         />
-                    )}
-                    {post.bigPost && (
+                    </Modal>
+
+                    <Modal open={post.bigPost}>
                         <Post
                             {...post}
                             embiggenForm={embiggenComponent}
                             index={index}
                         />
-                    )}
+                    </Modal>
                 </React.Fragment>
             ))}
         </>
