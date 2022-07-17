@@ -9,12 +9,17 @@ import {
     Box,
     Button,
     Divider,
+    Modal,
     Toolbar,
     Typography,
 } from '@mui/material';
+import UserForm from '../UserForm/UserForm';
+import { useRef } from 'react';
 const NavBar = () => {
     const navigate = useNavigate();
     const [user, setUser] = useState();
+    const [bigUserForm, setBigUserForm] = useState(false);
+    const userFormState = useRef('login');
 
     useEffect(() => {
         axios
@@ -108,7 +113,8 @@ const NavBar = () => {
                                         )
                                         .then((res) => {
                                             console.log(res);
-                                            navigate('/login');
+                                            navigate('/');
+                                            window.location.reload();
                                             console.log('you are logged out');
                                         })
                                         .catch((err) => console.log(err));
@@ -118,20 +124,42 @@ const NavBar = () => {
                             </Button>
                         </>
                     ) : (
-                        <Button
-                            variant="outlined"
-                            component={RouterLink}
-                            to="/login"
-                            sx={{
-                                color: 'white',
-                                borderColor: 'white',
-                            }}
-                        >
-                            Login
-                        </Button>
+                        <>
+                            <Button
+                                sx={{
+                                    color: 'white',
+                                    borderColor: 'white',
+                                }}
+                                onClick={() => {
+                                    userFormState.current = 'login';
+                                    setBigUserForm(true);
+                                }}
+                            >
+                                Login
+                            </Button>
+                            <Button
+                                variant="outlined"
+                                sx={{
+                                    color: 'white',
+                                    borderColor: 'white',
+                                }}
+                                onClick={() => {
+                                    userFormState.current = 'register';
+                                    setBigUserForm(true);
+                                }}
+                            >
+                                Register
+                            </Button>
+                        </>
                     )}
                 </Box>
             </Toolbar>
+            <Modal open={bigUserForm}>
+                <UserForm
+                    mode={userFormState.current}
+                    embiggenForm={setBigUserForm}
+                />
+            </Modal>
         </AppBar>
     );
 };

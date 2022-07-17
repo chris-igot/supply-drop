@@ -6,7 +6,6 @@ import Home from './views/Home/Home';
 import Logout from './components/Logout/Logout';
 import EditPost from './components/UpdatePosts/UpdatePosts';
 import UserDetail from './views/UserAccount/UserAccount';
-import EditUser from './views/EditUser/EditUser';
 import { Container } from '@mui/material';
 
 function App() {
@@ -25,10 +24,6 @@ function App() {
                         <Route
                             path="/account/:id"
                             element={<UserDetail />}
-                        ></Route>
-                        <Route
-                            path="/account/edit/:id"
-                            element={<EditUser />}
                         ></Route>
 
                         <Route

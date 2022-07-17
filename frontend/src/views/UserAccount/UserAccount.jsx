@@ -4,11 +4,13 @@ import { Link as RouterLink, useParams } from 'react-router-dom';
 import HomePosts from '../../components/HomePosts/HomePosts';
 import NavBar from '../../components/NavBar/NavBar';
 import ChatList from '../../components/Chat/ChatList';
-import { Button, Paper, Stack, Typography } from '@mui/material';
+import { Button, Modal, Paper, Stack, Typography } from '@mui/material';
 import { Settings } from '@mui/icons-material';
+import UserForm from '../../components/UserForm/UserForm';
 
 const UserDetail = (props) => {
     const [user, setUser] = useState();
+    const [bigUserForm, setBigUserForm] = useState(false);
     const { id } = useParams();
 
     useEffect(() => {
@@ -57,13 +59,18 @@ const UserDetail = (props) => {
                             Your Posts
                         </Typography>
                         <Button
-                            component={RouterLink}
-                            to={`/account/edit/${user._id}`}
                             sx={{ float: 'right' }}
+                            onClick={() => setBigUserForm(true)}
                         >
                             Edit Account
                             <Settings />
                         </Button>
+                        <Modal open={bigUserForm}>
+                            <UserForm
+                                mode="edit"
+                                embiggenForm={setBigUserForm}
+                            />
+                        </Modal>
                     </Paper>
                     <HomePosts id={id} />
                 </Stack>

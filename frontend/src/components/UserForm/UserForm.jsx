@@ -6,8 +6,9 @@ import { Button, Container, Grid, Paper, Typography } from '@mui/material';
 import logo from '../NavBar/logo.webp';
 import TextField from '../Forms/TextField';
 import { useRef } from 'react';
+import { Close } from '@mui/icons-material';
 
-const UserForm = React.forwardRef(({ mode, ...props }, ref) => {
+const UserForm = React.forwardRef(({ mode, embiggenForm, ...props }, ref) => {
     const navigate = useNavigate();
     const [errors, setErrors] = useState({});
     const [modeState, setModeState] = useState(mode);
@@ -17,7 +18,7 @@ const UserForm = React.forwardRef(({ mode, ...props }, ref) => {
     useEffect(() => {
         switch (modeState) {
             case 'login':
-            case 'registration':
+            case 'register':
                 setOkToRender(true);
                 break;
             case 'edit':
@@ -63,6 +64,7 @@ const UserForm = React.forwardRef(({ mode, ...props }, ref) => {
                     })
                     .then((res) => {
                         navigate('/');
+                        window.location.reload();
                     })
                     .catch((err) => {
                         const errResData = err.response.data.errors;
@@ -103,6 +105,7 @@ const UserForm = React.forwardRef(({ mode, ...props }, ref) => {
 
                     .then((res) => {
                         navigate('/');
+                        window.location.reload();
                     })
                     .catch((err) => {
                         setErrors({ password: 'Bad email or password' });
@@ -194,8 +197,17 @@ const UserForm = React.forwardRef(({ mode, ...props }, ref) => {
         >
             <form onSubmit={handleSubmit}>
                 <Grid container>
-                    <Grid item xs={12}>
+                    {mode !== 'edit' && <Grid item xs={1}></Grid>}
+                    <Grid item xs={mode === 'edit' ? 11 : 10}>
                         {renderHeader(modeState)}
+                    </Grid>
+                    <Grid item xs={1}>
+                        <Close
+                            sx={{ float: 'right', cursor: 'pointer' }}
+                            onClick={() => {
+                                embiggenForm(false);
+                            }}
+                        />
                     </Grid>
 
                     <Grid item xs={12}>
