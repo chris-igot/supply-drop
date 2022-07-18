@@ -39,7 +39,7 @@ function ChatList({ userId }) {
 
     function embiggen(index, active) {
         let tempGroupMessages = [...groupMessages];
-
+        console.trace('EMBIGGEN', { index, active });
         tempGroupMessages[index].bigChat = active;
         setGroupMessages(tempGroupMessages);
     }
@@ -76,25 +76,28 @@ function ChatList({ userId }) {
                         <Grid item xs={12}>
                             <List>
                                 {groupMessages.map((groupMessage, index) => (
-                                    <ListItem
-                                        key={index}
-                                        disablePadding
-                                        onClick={() => {
-                                            embiggen(index, true);
-                                        }}
-                                        sx={{ cursor: 'pointer' }}
-                                    >
-                                        <ListItemButton>
-                                            <ListItemIcon>
-                                                <ChatBubbleOutline />
-                                            </ListItemIcon>
-                                            <ListItemText
-                                                primary={
-                                                    'Conversation with:' +
-                                                    getOtherUser(groupMessage)
-                                                }
-                                            />
-                                        </ListItemButton>
+                                    <React.Fragment key={index}>
+                                        <ListItem
+                                            disablePadding
+                                            onClick={() => {
+                                                embiggen(index, true);
+                                            }}
+                                            sx={{ cursor: 'pointer' }}
+                                        >
+                                            <ListItemButton>
+                                                <ListItemIcon>
+                                                    <ChatBubbleOutline />
+                                                </ListItemIcon>
+                                                <ListItemText
+                                                    primary={
+                                                        'Conversation with:' +
+                                                        getOtherUser(
+                                                            groupMessage
+                                                        )
+                                                    }
+                                                />
+                                            </ListItemButton>
+                                        </ListItem>
                                         <Modal open={groupMessage.bigChat}>
                                             <ChatBox
                                                 groupId={groupMessage._id}
@@ -103,7 +106,7 @@ function ChatList({ userId }) {
                                                 embiggenChat={embiggen}
                                             />
                                         </Modal>
-                                    </ListItem>
+                                    </React.Fragment>
                                 ))}
                             </List>
                         </Grid>
