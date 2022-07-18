@@ -1,16 +1,15 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import HomePosts from '../../components/HomePosts/HomePosts';
+import HomePosts from '../../components/Home/HomePosts';
 import NavBar from '../../components/NavBar/NavBar';
 import ChatList from '../../components/Chat/ChatList';
-import { Button, Modal, Paper, Stack, Typography } from '@mui/material';
-import { Settings } from '@mui/icons-material';
-import UserForm from '../../components/Forms/UserForm';
+import { Stack } from '@mui/material';
+import { AccountTopBar } from '../../components/Home/AccountTopBar';
+import { pageContainerStyle } from '../common/style';
 
 const UserDetail = (props) => {
     const [user, setUser] = useState();
-    const [bigUserForm, setBigUserForm] = useState(false);
     const { id } = useParams();
 
     useEffect(() => {
@@ -38,40 +37,8 @@ const UserDetail = (props) => {
             <>
                 <NavBar />
 
-                <Stack
-                    spacing={2}
-                    sx={{
-                        display: 'block',
-                        paddingTop: '5rem',
-                        paddingBottom: '1rem',
-                    }}
-                >
-                    <Paper
-                        elevation={5}
-                        sx={{
-                            display: 'flex',
-                            padding: '1rem',
-                            justifyContent: 'space-between',
-                            alignItems: 'center',
-                        }}
-                    >
-                        <Typography variant="h4" component="h2">
-                            Your Posts
-                        </Typography>
-                        <Button
-                            sx={{ float: 'right' }}
-                            onClick={() => setBigUserForm(true)}
-                        >
-                            Edit Account
-                            <Settings />
-                        </Button>
-                        <Modal open={bigUserForm}>
-                            <UserForm
-                                mode="edit"
-                                embiggenForm={setBigUserForm}
-                            />
-                        </Modal>
-                    </Paper>
+                <Stack spacing={2} sx={pageContainerStyle}>
+                    <AccountTopBar />
                     <HomePosts id={id} />
                 </Stack>
                 <ChatList userId={id} />
