@@ -39,6 +39,7 @@ let UserSchema = new Schema(
 );
 
 UserSchema.pre('save', function (next) {
+    this.email = this.email.toLowerCase();
     bcrypt.hash(this.password, 10).then((hash) => {
         this.password = hash;
         next();
