@@ -1,10 +1,9 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import './Home.css';
 import PostForm from '../../components/Forms/PostForm';
 import HomePosts from '../../components/HomePosts/HomePosts';
 import NavBar from '../../components/NavBar/NavBar';
-import logo from './logo.webp';
+import logo from '../../assets/logo.webp';
 import ChatList from '../../components/Chat/ChatList';
 import { Chip, Modal, Paper, Stack } from '@mui/material';
 
@@ -37,7 +36,7 @@ const Home = () => {
                         <img
                             src={logo}
                             alt=""
-                            srcset=""
+                            srcSet=""
                             className="supply-drop"
                         />
                         <Chip

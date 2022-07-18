@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
-
-import './NavBar.css';
 import logo from '../../assets/logo.webp';
 import {
     AppBar,
@@ -58,7 +56,7 @@ const NavBar = () => {
                     <img
                         src={logo}
                         alt=""
-                        srcset=""
+                        srcSet=""
                         className="supply-drop-logo"
                     />
                 </Typography>

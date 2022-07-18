@@ -64,7 +64,7 @@ function ChatList({ userId }) {
                     }}
                 >
                     <Grid container>
-                        <Grid xs={12}>
+                        <Grid item xs={12}>
                             {' '}
                             <Close
                                 sx={{ float: 'right', cursor: 'pointer' }}
@@ -73,7 +73,7 @@ function ChatList({ userId }) {
                                 }}
                             />
                         </Grid>
-                        <Grid xs={12}>
+                        <Grid item xs={12}>
                             <List>
                                 {groupMessages.map((groupMessage, index) => (
                                     <ListItem
