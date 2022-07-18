@@ -5,7 +5,7 @@ let MessageSchema = new Schema(
         message: {
             type: String,
             required: [true, 'Message is required'],
-            minlength: [2, 'Message must be longer then 1 character'],
+            minlength: [1, 'Message must be longer then 1 character'],
         },
 
         user: { type: mongoose.Types.ObjectId, ref: 'User' },

@@ -9,20 +9,22 @@ module.exports = function (io) {
             socket.join(params.groupId);
             console.log(params.userId, ' has joined ', params.groupId);
             socket.on('message', async (message) => {
-                const messageObject = {
-                    user: params.userId,
-                    message,
-                };
+                if (message && message.length > 0) {
+                    const messageObject = {
+                        user: params.userId,
+                        message,
+                    };
 
-                io.to(params.groupId).emit('message', messageObject);
-                const newMsg = await Message.create(messageObject);
-                const updatedMsgGroup = await MessageGroup.findOneAndUpdate(
-                    { _id: params.groupId },
-                    { $push: { messages: newMsg._id } },
-                    {
-                        new: true,
-                    }
-                );
+                    io.to(params.groupId).emit('message', messageObject);
+                    const newMsg = await Message.create(messageObject);
+                    const updatedMsgGroup = await MessageGroup.findOneAndUpdate(
+                        { _id: params.groupId },
+                        { $push: { messages: newMsg._id } },
+                        {
+                            new: true,
+                        }
+                    );
+                }
             });
         } else {
             socket.emit('message', 'Invalid information');
