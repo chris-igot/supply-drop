@@ -135,6 +135,7 @@ const ChatBox = React.forwardRef(
                             const isSelf = user._id === userId;
                             return (
                                 <Message
+                                    key={index}
                                     name={user.firstName + ' ' + user.lastName}
                                     message={messageObject.message}
                                     isSender={isSelf}
@@ -146,6 +147,7 @@ const ChatBox = React.forwardRef(
                             const isSelf = user._id === userId;
                             return (
                                 <Message
+                                    key={index}
                                     name={user.firstName + ' ' + user.lastName}
                                     message={messageObject.message}
                                     isSender={isSelf}
