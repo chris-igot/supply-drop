@@ -1,69 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
 
-.flex {
-    display: flex;
-}
-
-.align-center {
-    align-items: center;
-}
-
-.nav {
-    background-color: #ffff;
-    padding: 10px 15px;
-    margin-bottom: 15px;
-    justify-content: space-between;
-    color: #0b343d;
-    /* position: fixed;
-    top: 0; left: 0; right: 0; */
-    /* background-image: linear-gradient(to bottom right, #96ccec, #e3ec96); */
-}
-
-.nav h1 {
-    font-size: 2.2em;
-    margin-right: 10px;
-    font-weight: 600;
-    cursor: default;
-}
-
-.nav button {
-    margin: 0 10px;
-}
-
-.nav a {
-    font-size: 1.2em;
-    color: #657f84;
-    text-decoration: none;
-    padding: 0 10px;
-    border-left: 2px solid #7ea9c2;
-    cursor: pointer;
-}
-
-.nav a:hover {
-    text-decoration: underline;
-    color: #d89859;
-    transition: 0.3s;
-}
-
-.no-border {
-    border: none !important;
-}
-
-.nav input[type='text'] {
-    border-radius: 50px;
-    height: min-content;
-    padding: 5px 10px;
-    border: 2px solid #0b343d;
-}
-
-.nav input[type='text']:focus {
-    outline: none;
-}
-
-.title-search {
-    flex: 1;
-}
-
 .title-logo {
     color: #5690c3;
     font-family: 'Bebas Neue';
@@ -79,13 +15,6 @@
     /* padding-bottom: 5px;
     padding-right: 20px; */
 }
-
-/* .user {
-    font-size: 18px;
-    background-color: #f0f2f5;
-    padding: 5px;
-    border-radius: 5px;
-} */
 
 .username {
     font-style: italic;

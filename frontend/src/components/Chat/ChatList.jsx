@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import ChatBox from './ChatBox';
-import './Chat.css';
 import {
     Badge,
     Fab,
@@ -15,7 +14,7 @@ import {
     Modal,
     Paper,
 } from '@mui/material';
-import { AddCircle, ChatBubbleOutline, Close } from '@mui/icons-material';
+import { ChatBubbleOutline, Close } from '@mui/icons-material';
 
 function ChatList({ userId }) {
     const [groupMessages, setGroupMessages] = useState([]);

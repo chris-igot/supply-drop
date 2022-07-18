@@ -1,5 +1,4 @@
 import React from 'react';
-import './post.css';
 
 import StartChat from '../Chat/StartChat';
 import {
