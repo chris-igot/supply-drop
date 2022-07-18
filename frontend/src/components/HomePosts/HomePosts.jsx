@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import Post from '../Post/Post';
-import PostForm from '../PostForm';
+import PostForm from '../Forms/PostForm';
 import { Edit, DeleteForever, PinDrop } from '@mui/icons-material';
 import {
     Box,

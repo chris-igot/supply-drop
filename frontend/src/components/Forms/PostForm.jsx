@@ -13,7 +13,7 @@ import {
     Typography,
     TextField,
 } from '@mui/material';
-import './PostForm/PostForm.css';
+import './PostForm.css';
 import './PostForm.css';
 import AutoCompleteLocations from './AutocompleteLocations';
 import { Close } from '@mui/icons-material';

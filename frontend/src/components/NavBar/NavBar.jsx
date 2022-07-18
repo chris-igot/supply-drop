@@ -3,7 +3,7 @@ import axios from 'axios';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 
 import './NavBar.css';
-import logo from './logo.webp';
+import logo from '../../assets/logo.webp';
 import {
     AppBar,
     Box,
@@ -13,7 +13,7 @@ import {
     Toolbar,
     Typography,
 } from '@mui/material';
-import UserForm from '../UserForm/UserForm';
+import UserForm from '../Forms/UserForm';
 import { useRef } from 'react';
 const NavBar = () => {
     const navigate = useNavigate();

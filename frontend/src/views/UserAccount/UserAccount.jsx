@@ -6,7 +6,7 @@ import NavBar from '../../components/NavBar/NavBar';
 import ChatList from '../../components/Chat/ChatList';
 import { Button, Modal, Paper, Stack, Typography } from '@mui/material';
 import { Settings } from '@mui/icons-material';
-import UserForm from '../../components/UserForm/UserForm';
+import UserForm from '../../components/Forms/UserForm';
 
 const UserDetail = (props) => {
     const [user, setUser] = useState();

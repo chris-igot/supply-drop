@@ -3,8 +3,8 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { Button, Container, Grid, Paper, Typography } from '@mui/material';
-import logo from '../NavBar/logo.webp';
-import TextField from '../Forms/TextField';
+import logo from '../../assets/logo.webp';
+import TextField from './TextField';
 import { useRef } from 'react';
 import { Close } from '@mui/icons-material';
 
