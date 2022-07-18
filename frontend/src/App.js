@@ -10,7 +10,6 @@ function App() {
             <BrowserRouter>
                 <Routes>
                     <Route path="/" element={<Home />}></Route>
-                    {/* IF YOU ARE DOING ACCOUNT PLZ CHANGE -> will be /account/id try to make id into the username if you can or not */}
                     <Route path="/account/:id" element={<UserDetail />}></Route>
                 </Routes>
             </BrowserRouter>
