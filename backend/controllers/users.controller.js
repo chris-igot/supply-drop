@@ -6,7 +6,7 @@ console.log(User);
 module.exports = {
     login: async (req, res) => {
         const user = await User.findOne({ email: req.body.email });
-
+        console.log(req.body);
         if (user === null) {
             return res.sendStatus(400);
         }
@@ -15,7 +15,7 @@ module.exports = {
             req.body.password,
             user.password
         );
-
+        console.log({ correctPassword });
         if (!correctPassword) {
             return res.sendStatus(400);
         }
@@ -24,10 +24,10 @@ module.exports = {
             {
                 id: user._id,
             },
-            process.env.SECRET_KEY
+            process.env.SECRET_KEY_SUPPLYDROP
         );
-
-        res.cookie('usertoken', userToken, process.env.SECRET_KEY, {
+        console.log({ userToken });
+        res.cookie('usertoken', userToken, process.env.SECRET_KEY_SUPPLYDROP, {
             httpOnly: true,
         }).json({ msg: 'success!' });
     },
@@ -44,11 +44,16 @@ module.exports = {
                     {
                         id: user._id,
                     },
-                    process.env.SECRET_KEY
+                    process.env.SECRET_KEY_SUPPLYDROP
                 );
-                res.cookie('usertoken', userToken, process.env.SECRET_KEY, {
-                    httpOnly: true,
-                });
+                res.cookie(
+                    'usertoken',
+                    userToken,
+                    process.env.SECRET_KEY_SUPPLYDROP,
+                    {
+                        httpOnly: true,
+                    }
+                );
                 res.json(user);
             });
         } catch (err) {
