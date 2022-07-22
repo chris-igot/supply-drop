@@ -23,7 +23,7 @@ const ChatBox = React.forwardRef(
         const [users, setUsers] = useState({});
         const scrollRef = useRef(null);
         const socketRef = useRef(
-            io('ws://localhost:8000', {
+            io(process.env.REACT_APP_SOCKETIO_SUPPLYDROP, {
                 reconnectionDelayMax: 10000,
                 query: {
                     groupId,
@@ -34,7 +34,7 @@ const ChatBox = React.forwardRef(
 
         useEffect(() => {
             axios
-                .get('http://localhost:8000/api/message/' + groupId, {
+                .get('/api/message/' + groupId, {
                     withCredentials: true,
                 })
                 .then((res) => {

@@ -14,7 +14,7 @@ const UserDetail = (props) => {
 
     useEffect(() => {
         axios
-            .get(`http://localhost:8000/api/user/${id}`, user, {
+            .get(`/api/user/${id}`, user, {
                 withCredentials: true,
             })
             .then((res) => {
@@ -25,7 +25,7 @@ const UserDetail = (props) => {
 
     useEffect(() => {
         axios
-            .get(`http://localhost:8000/api/auth`, { withCredentials: true })
+            .get(`/api/auth`, { withCredentials: true })
             .then((res) => {
                 setUser(res.data);
             })

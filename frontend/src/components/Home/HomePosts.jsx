@@ -20,7 +20,7 @@ const HomePosts = (props) => {
 
     useEffect(() => {
         axios
-            .get(`http://localhost:8000/api/auth`, { withCredentials: true })
+            .get(`/api/auth`, { withCredentials: true })
             .then((res) => {
                 setUser(res.data);
                 updatePosts();
@@ -34,7 +34,7 @@ const HomePosts = (props) => {
 
     const updatePosts = () => {
         axios
-            .get('http://localhost:8000/api/post/')
+            .get('/api/post/')
             .then((res) => {
                 let data = res.data;
                 data.reverse();
@@ -58,7 +58,7 @@ const HomePosts = (props) => {
 
     const handleDelete = (postID) => {
         axios
-            .delete(`http://localhost:8000/api/post/${postID}`, {
+            .delete(`/api/post/${postID}`, {
                 withCredentials: true,
             })
             .then((res) => {

@@ -21,7 +21,7 @@ const NavBar = () => {
 
     useEffect(() => {
         axios
-            .get(`http://localhost:8000/api/auth`, { withCredentials: true })
+            .get(`/api/auth`, { withCredentials: true })
             .then((res) => {
                 setUser(res.data);
             })
@@ -105,7 +105,7 @@ const NavBar = () => {
 
                                     axios
                                         .post(
-                                            'http://localhost:8000/api/user/logout',
+                                            '/api/user/logout',
                                             {},
                                             { withCredentials: true }
                                         )

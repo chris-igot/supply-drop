@@ -14,7 +14,7 @@ const Home = () => {
 
     useEffect(() => {
         axios
-            .get(`http://localhost:8000/api/auth`, { withCredentials: true })
+            .get(`/api/auth`, { withCredentials: true })
             .then((res) => {
                 setUser(res.data);
             })

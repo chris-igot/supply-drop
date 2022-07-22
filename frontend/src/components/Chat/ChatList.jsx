@@ -22,7 +22,7 @@ function ChatList({ userId }) {
 
     useEffect(() => {
         axios
-            .get('http://localhost:8000/api/message/self', {
+            .get('/api/message/self', {
                 withCredentials: true,
             })
             .then((res) => {

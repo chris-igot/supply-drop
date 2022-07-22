@@ -32,10 +32,9 @@ const PostForm = React.forwardRef((props, ref) => {
 
     async function getPostInfo() {
         try {
-            const response = await axios.get(
-                `http://localhost:8000/api/post/${postID}`,
-                { withCredentials: true }
-            );
+            const response = await axios.get(`/api/post/${postID}`, {
+                withCredentials: true,
+            });
             setPostInfo(response.data);
             setOkToRender(true);
         } catch (err) {
@@ -80,7 +79,7 @@ const PostForm = React.forwardRef((props, ref) => {
             data.append('_id', postInfo._id);
 
             axios
-                .put(`http://localhost:8000/api/post/${postID}`, data, {
+                .put(`/api/post/${postID}`, data, {
                     withCredentials: true,
                 })
                 .then((res) => {
@@ -97,7 +96,7 @@ const PostForm = React.forwardRef((props, ref) => {
             data.append('postedBy', userID);
 
             axios
-                .post(`http://localhost:8000/api/post/new`, data, {
+                .post(`/api/post/new`, data, {
                     withCredentials: true,
                 })
                 .then((res) => {

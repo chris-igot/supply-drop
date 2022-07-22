@@ -63,7 +63,7 @@ const Post = React.forwardRef(
                             <ImageListItem>
                                 <img
                                     style={{ objectFit: 'cover' }}
-                                    src={'http://localhost:8000/img/' + image}
+                                    src={'/img/' + image}
                                     alt={title}
                                 />
                             </ImageListItem>

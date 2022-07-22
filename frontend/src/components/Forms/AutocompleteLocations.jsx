@@ -18,12 +18,9 @@ function AutoCompleteLocations({ setLocation, defaultValue, ...props }) {
 
             console.log(newInputValue, event);
             axios
-                .get(
-                    'http://localhost:8000/api/place/search?q=' + newInputValue,
-                    {
-                        withCredentials: true,
-                    }
-                )
+                .get('/api/place/search?q=' + newInputValue, {
+                    withCredentials: true,
+                })
                 .then((res) => {
                     setResults(res.data);
                 });

@@ -23,7 +23,7 @@ const UserForm = React.forwardRef(({ mode, embiggenForm, ...props }, ref) => {
                 break;
             case 'edit':
                 axios
-                    .get('http://localhost:8000/api/auth', {
+                    .get('/api/auth', {
                         withCredentials: true,
                     })
                     .then((res) => {
@@ -56,7 +56,7 @@ const UserForm = React.forwardRef(({ mode, embiggenForm, ...props }, ref) => {
 
         switch (modeState) {
             case 'register':
-                url = 'http://localhost:8000/api/user/register';
+                url = '/api/user/register';
 
                 axios
                     .post(url, data, {
@@ -77,7 +77,7 @@ const UserForm = React.forwardRef(({ mode, embiggenForm, ...props }, ref) => {
                     });
                 break;
             case 'edit':
-                url = `http://localhost:8000/api/user/${userRef.current._id}`;
+                url = `/api/user/${userRef.current._id}`;
 
                 axios
                     .put(url, data, {
@@ -99,9 +99,7 @@ const UserForm = React.forwardRef(({ mode, embiggenForm, ...props }, ref) => {
                 break;
             case 'login':
                 axios
-                    .post('http://localhost:8000/api/user/login', data, {
-                        withCredentials: true,
-                    })
+                    .post('/api/user/login', data)
 
                     .then((res) => {
                         navigate('/');
