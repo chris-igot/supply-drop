@@ -23,7 +23,7 @@ const ChatBox = React.forwardRef(
         const [users, setUsers] = useState({});
         const scrollRef = useRef(null);
         const socketRef = useRef(
-            io(process.env.REACT_APP_SOCKETIO_SUPPLYDROP, {
+            io({
                 reconnectionDelayMax: 10000,
                 query: {
                     groupId,
