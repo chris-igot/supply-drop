@@ -12,25 +12,18 @@ import {
     Paper,
     Typography,
 } from '@mui/material';
+import useAuth from '../Hooks/useAuth';
 
-const HomePosts = (props) => {
+const HomePosts = ({ ownPosts }) => {
+    const { user, isLoggedIn } = useAuth();
     const [posts, setPosts] = useState([]);
-    const [user, setUser] = useState({});
-    const id = props.id;
 
     useEffect(() => {
-        axios
-            .get(`/api/auth`, { withCredentials: true })
-            .then((res) => {
-                setUser(res.data);
-                updatePosts();
-            })
-            .catch((err) => {
-                console.log(err);
-                updatePosts();
-            });
+        if (user) {
+            updatePosts();
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [user]);
 
     const updatePosts = () => {
         axios
@@ -43,9 +36,9 @@ const HomePosts = (props) => {
                     element.bigEdit = false;
                 });
 
-                if (id) {
-                    data = data.filter(function (props) {
-                        return props.postedBy._id === id;
+                if (ownPosts) {
+                    data = data.filter(function (post) {
+                        return post.postedBy._id === user._id;
                     });
                 }
 
@@ -69,14 +62,12 @@ const HomePosts = (props) => {
 
     const embiggenComponent = (postIndex, active, bigType) => {
         let tempPosts = [...posts];
-        console.log('EMBIGGEN!', postIndex, tempPosts[postIndex]);
 
         if (bigType === 'post') {
             tempPosts[postIndex].bigPost = active;
         } else {
             tempPosts[postIndex].bigEdit = active;
         }
-        console.log('EMBIGGEN!', tempPosts);
 
         setPosts(tempPosts);
     };
@@ -202,6 +193,7 @@ const HomePosts = (props) => {
                     <Modal open={post.bigPost}>
                         <Post
                             {...post}
+                            isLoggedIn={isLoggedIn}
                             embiggenForm={embiggenComponent}
                             index={index}
                         />

@@ -1,5 +1,4 @@
 import React from 'react';
-import { useParams } from 'react-router-dom';
 import HomePosts from '../../components/Home/HomePosts';
 import NavBar from '../../components/NavBar/NavBar';
 import ChatList from '../../components/Chat/ChatList';
@@ -10,7 +9,6 @@ import useAuth from '../../components/Hooks/useAuth';
 
 const UserDetail = (props) => {
     const { user } = useAuth();
-    const { id } = useParams();
 
     return (
         user && (
@@ -19,9 +17,9 @@ const UserDetail = (props) => {
 
                 <Stack spacing={2} sx={pageContainerStyle}>
                     <AccountTopBar />
-                    <HomePosts id={id} />
+                    <HomePosts ownPosts={true} />
                 </Stack>
-                <ChatList userId={id} />
+                <ChatList userId={user._id} />
             </>
         )
     );
