@@ -36,17 +36,17 @@ module.exports = function (io) {
                     throw new Error('bad-input');
                 }
 
-                const usersObjId = users.map((oneUserId) =>
-                    mongoose.Types.ObjectId(oneUserId)
-                );
-
+                let userData = [];
+                const usersObjId = users.map((oneUserId) => {
+                    userData.push({ userId: oneUserId });
+                    return mongoose.Types.ObjectId(oneUserId);
+                });
                 const usersDB = await User.find({ _id: { $in: usersObjId } });
+                let messages = [];
 
                 if (usersObjId.length !== usersDB.length) {
                     throw new Error('Users listed are not in the database');
                 }
-
-                let messages = [];
 
                 if (newMessageObj.message) {
                     const newMessage = await Message.create({
@@ -61,6 +61,7 @@ module.exports = function (io) {
                     name: groupName,
                     users: usersDB,
                     messages,
+                    userData,
                 });
 
                 users.forEach((oneUserId) => {
@@ -89,11 +90,18 @@ module.exports = function (io) {
                     '-messages'
                 );
 
+                console.log('before', messageGroupDB);
+
                 const userIndex = messageGroupDB.users.findIndex(
                     (userObjectId) => userObjectId.toString() === userId
                 );
 
-                if (userIndex < 0) {
+                if (userIndex >= 0) {
+                    messageGroupDB.userData[userIndex].chatUnseen = false;
+                    messageGroupDB.userData[userIndex].messagesUnread = 0;
+                    await messageGroupDB.save();
+                    console.log('after', messageGroupDB);
+                } else {
                     throw new Error('User does not exist in this chat group');
                 }
             } catch (error) {
@@ -126,6 +134,14 @@ module.exports = function (io) {
                             new: true,
                         }
                     );
+
+                    await updatedMsgGroup.userData.forEach((userDatum) => {
+                        if (userDatum.userId.toString() !== userId) {
+                            userDatum.messagesUnread++;
+                        }
+                    });
+
+                    await updatedMsgGroup.save();
 
                     io.to(usrMessageObj.groupId).emit(
                         'message',

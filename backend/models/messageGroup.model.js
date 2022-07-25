@@ -9,6 +9,14 @@ let MessageGroupSchema = new Schema(
         users: [{ type: mongoose.Types.ObjectId, ref: 'User' }],
 
         messages: [{ type: mongoose.Types.ObjectId, ref: 'Message' }],
+
+        userData: [
+            {
+                userId: { type: mongoose.Types.ObjectId, ref: 'User' },
+                chatUnseen: { type: Boolean, default: true },
+                messagesUnread: { type: Number, default: 1 },
+            },
+        ],
     },
     { timestamps: true }
 );
