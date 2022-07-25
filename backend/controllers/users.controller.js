@@ -125,9 +125,15 @@ module.exports = {
     getLoggedUser: (req, res) => {
         const userToken = res.locals.payload;
         console.log(userToken);
-        User.findOne({ _id: userToken.id }, '-password')
+        User.findOne(
+            { _id: userToken.id },
+            '-password -__v -updatedAt -createdAt'
+        )
             .then((loggedUser) => {
-                res.json(loggedUser);
+                res.json({
+                    token: req.cookies.usertoken,
+                    ...loggedUser.toJSON(),
+                });
             })
             .catch((err) => res.json(err));
     },
