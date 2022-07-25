@@ -1,5 +1,4 @@
-import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import PostForm from '../../components/Forms/PostForm';
 import HomePosts from '../../components/Home/HomePosts';
 import NavBar from '../../components/NavBar/NavBar';
@@ -7,23 +6,15 @@ import ChatList from '../../components/Chat/ChatList';
 import { Modal, Stack } from '@mui/material';
 import { HomeNewPostBar } from '../../components/Home/HomeNewPostBar';
 import { pageContainerStyle } from '../common/style';
+import useAuth from '../../components/Hooks/useAuth';
 
 const Home = () => {
-    const [user, setUser] = useState();
     const [bigForm, setBigForm] = useState(false);
-
-    useEffect(() => {
-        axios
-            .get(`/api/auth`, { withCredentials: true })
-            .then((res) => {
-                setUser(res.data);
-            })
-            .catch((err) => console.log(err));
-    }, []);
+    const { user } = useAuth();
 
     return (
         <>
-            <NavBar />
+            <NavBar user={user} />
 
             <Stack spacing={2} sx={pageContainerStyle}>
                 {user && <HomeNewPostBar setBigForm={setBigForm} />}

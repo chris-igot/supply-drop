@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import logo from '../../assets/logo.webp';
@@ -13,20 +13,10 @@ import {
 } from '@mui/material';
 import UserForm from '../Forms/UserForm';
 import { useRef } from 'react';
-const NavBar = () => {
+const NavBar = ({ user }) => {
     const navigate = useNavigate();
-    const [user, setUser] = useState();
     const [bigUserForm, setBigUserForm] = useState(false);
     const userFormState = useRef('login');
-
-    useEffect(() => {
-        axios
-            .get(`/api/auth`, { withCredentials: true })
-            .then((res) => {
-                setUser(res.data);
-            })
-            .catch((err) => console.log(err));
-    }, []);
 
     return (
         <AppBar component="nav">

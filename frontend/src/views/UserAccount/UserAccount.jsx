@@ -1,5 +1,4 @@
-import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useParams } from 'react-router-dom';
 import HomePosts from '../../components/Home/HomePosts';
 import NavBar from '../../components/NavBar/NavBar';
@@ -7,35 +6,16 @@ import ChatList from '../../components/Chat/ChatList';
 import { Stack } from '@mui/material';
 import { AccountTopBar } from '../../components/Home/AccountTopBar';
 import { pageContainerStyle } from '../common/style';
+import useAuth from '../../components/Hooks/useAuth';
 
 const UserDetail = (props) => {
-    const [user, setUser] = useState();
+    const { user } = useAuth();
     const { id } = useParams();
-
-    useEffect(() => {
-        axios
-            .get(`/api/user/${id}`, user, {
-                withCredentials: true,
-            })
-            .then((res) => {
-                //console.log(res)
-            })
-            .catch((err) => console.log(err));
-    });
-
-    useEffect(() => {
-        axios
-            .get(`/api/auth`, { withCredentials: true })
-            .then((res) => {
-                setUser(res.data);
-            })
-            .catch((err) => console.log(err));
-    }, []);
 
     return (
         user && (
             <>
-                <NavBar />
+                <NavBar user={user} />
 
                 <Stack spacing={2} sx={pageContainerStyle}>
                     <AccountTopBar />
