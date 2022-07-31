@@ -19,9 +19,7 @@ const HomePosts = ({ ownPosts }) => {
     const [posts, setPosts] = useState([]);
 
     useEffect(() => {
-        if (user) {
-            updatePosts();
-        }
+        updatePosts();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [user]);
 
@@ -137,7 +135,7 @@ const HomePosts = ({ ownPosts }) => {
                                 </Typography>
                             </Grid>
                             <Grid item xs={2}>
-                                {post.postedBy._id === user._id && (
+                                {user && post.postedBy._id === user._id && (
                                     <Box>
                                         <Edit
                                             onClick={() => {
