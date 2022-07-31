@@ -17,7 +17,12 @@ function useAuth() {
             });
     }, []);
 
-    return { user, isLoggedIn, userId: user ? user._id : undefined };
+    return {
+        user,
+        isLoggedIn,
+        userId: user ? user._id : undefined,
+        token: user ? user.token : undefined,
+    };
 }
 
 export default useAuth;
