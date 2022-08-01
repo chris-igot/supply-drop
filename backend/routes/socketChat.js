@@ -13,6 +13,7 @@ module.exports = function (io) {
                 process.env.SECRET_KEY_SUPPLYDROP
             );
             userId = decodedToken.id;
+            socket.join('userId-' + userId);
         } catch (error) {
             socket.disconnect();
         }
@@ -33,7 +34,13 @@ module.exports = function (io) {
 
                 let userData = [];
                 const usersObjId = users.map((oneUserId) => {
-                    userData.push({ userId: oneUserId });
+                    let userDatum = { userId: oneUserId };
+
+                    if (oneUserId === userId) {
+                        userDatum.chatUnseen = false;
+                        userDatum.messagesUnread = 0;
+                    }
+                    userData.push(userDatum);
                     return mongoose.Types.ObjectId(oneUserId);
                 });
                 const usersDB = await User.find({ _id: { $in: usersObjId } });
@@ -59,13 +66,9 @@ module.exports = function (io) {
                     userData,
                 });
 
-                users.forEach((oneUserId) => {
-                    if (oneUserId !== userId) {
-                        io.to('user-' + oneUserId).emit('status', {
-                            type: 'user-newmessage-notification',
-                            data: { userId },
-                        });
-                    }
+                io.to(groupId).emit('status', {
+                    type: 'chat-created',
+                    data: { groupId: usrMessageObj.groupId },
                 });
             } catch (err) {
                 socket.emit('status', {
@@ -99,7 +102,6 @@ module.exports = function (io) {
                 });
                 return;
             }
-
             socket.join(groupId);
             socket.emit('status', {
                 type: 'user-joined',
@@ -116,7 +118,7 @@ module.exports = function (io) {
                     type: 'user-left',
                     data: { groupId },
                 });
-                io.to(groupId).emit('status', {
+                socket.to(groupId).emit('status', {
                     type: 'chat-left',
                     data: { userId },
                 });
@@ -138,8 +140,17 @@ module.exports = function (io) {
                 );
 
                 await updatedMsgGroup.userData.forEach((userDatum) => {
-                    if (userDatum.userId.toString() !== userId) {
+                    const otherUserId = userDatum.userId.toString();
+                    const otherUserRoom = io.sockets.adapter.rooms.get(
+                        'userId-' + otherUserId
+                    );
+
+                    if (otherUserRoom && otherUserId !== userId) {
                         userDatum.messagesUnread++;
+                        socket.to('userId-' + otherUserId).emit('status', {
+                            type: 'message-received',
+                            data: { groupId: usrMessageObj.groupId },
+                        });
                     }
                 });
 

@@ -1,7 +1,4 @@
-const { User } = require('../models/user.model');
-const { Message } = require('../models/message.model');
 const { MessageGroup } = require('../models/messageGroup.model');
-const { json } = require('express');
 
 async function getMessageGroups(req, res) {
     const userToken = res.locals.payload;
@@ -41,7 +38,6 @@ async function getGroupMessages(req, res) {
         if (
             result.length > 0 &&
             result[0].users.findIndex((user) => {
-                // console.log(user._id.toString(), userToken.id);
                 return user._id.toString() === userToken.id;
             }) >= 0
         ) {
@@ -59,10 +55,8 @@ async function createNewGroup(req, res) {
     const userToken = res.locals.payload;
     let groupName = req.body.groupName;
     let users = req.body.users;
-    console.log('start chat');
     try {
         if (userToken && users) {
-            // console.log(req.body);
             if (Array.isArray(users)) {
                 users.push(userToken.id);
             } else {
@@ -83,7 +77,6 @@ async function createNewGroup(req, res) {
             users,
             messages: [],
         });
-        console.log('out', newMsgGroup);
         res.send(newMsgGroup);
     } catch (err) {
         console.log(err);

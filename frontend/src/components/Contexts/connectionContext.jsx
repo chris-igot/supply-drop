@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { io } from 'socket.io-client';
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import useAuth from '../Hooks/useAuth';
 
 const connectionContext = React.createContext({

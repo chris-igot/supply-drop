@@ -26,6 +26,7 @@ const ChatBox = React.forwardRef(
 
         useEffect(() => {
             if (!joinedRef.current) {
+                io.emit('JOIN_CHAT', groupId);
                 axios
                     .get('/api/message/' + groupId, {
                         withCredentials: true,
@@ -56,6 +57,7 @@ const ChatBox = React.forwardRef(
         }, [messages, socketMessages]);
 
         useEffect(() => {
+            console.log({ latestMessage });
             if (latestMessage) {
                 appendMessage(latestMessage);
             }

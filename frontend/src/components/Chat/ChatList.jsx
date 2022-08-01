@@ -15,37 +15,108 @@ import {
     Paper,
 } from '@mui/material';
 import { ChatBubbleOutline, Close } from '@mui/icons-material';
+import { useContext } from 'react';
+import { connectionContext } from '../Contexts/connectionContext';
 
 function ChatList({ userId }) {
     const [groupMessages, setGroupMessages] = useState([]);
     const [bigChatList, setBigChatList] = useState(false);
+    const [unreadCounts, setUnreadCounts] = useState({});
+    const { latestStatus } = useContext(connectionContext);
 
     useEffect(() => {
+        updateGroupMessages();
+    }, []);
+
+    useEffect(() => {
+        console.log({ latestStatus });
+        if (latestStatus) {
+            switch (latestStatus.type) {
+                case 'message-received':
+                    setCount(latestStatus.data.groupId, 'add');
+                    break;
+                case 'chat-created':
+                    updateGroupMessages();
+                    break;
+                default:
+                    break;
+            }
+        }
+    }, [latestStatus]);
+
+    function updateGroupMessages() {
         axios
             .get('/api/message/self', {
                 withCredentials: true,
             })
             .then((res) => {
                 let data = res.data;
-                data.forEach((item) => {
-                    item.bigChat = false;
+                let counts = {};
+
+                data.forEach((group) => {
+                    group.bigChat = false;
+                    counts[group._id] = 0;
+                    group.userData.find((userDatum) => {
+                        const found = userDatum.userId === userId;
+
+                        if (found) {
+                            counts[group._id] += userDatum.messagesUnread;
+                        }
+                        return found;
+                    });
                 });
+                setUnreadCounts(counts);
                 setGroupMessages(data);
             })
             .catch((err) => {
                 console.log(err);
             });
-    }, []);
+    }
 
     function embiggen(index, active) {
         let tempGroupMessages = [...groupMessages];
+
         tempGroupMessages[index].bigChat = active;
+        if (active) {
+            setCount(tempGroupMessages[index]._id, 'zero');
+        }
         setGroupMessages(tempGroupMessages);
     }
 
     function getOtherUser(groupMessage) {
         const user = groupMessage.users.find((user) => userId !== user._id);
         return user.firstName + ' ' + user.lastName;
+    }
+
+    function getCounts(groupId = 'all') {
+        let count = 0;
+        console.log({ unreadCounts, groupMessages });
+        if (groupId === 'all') {
+            for (const id in unreadCounts) {
+                count += unreadCounts[id];
+            }
+        } else {
+            count = unreadCounts[groupId];
+        }
+
+        return count;
+    }
+
+    function setCount(groupId, type = 'add', num = 1) {
+        let newCounts = { ...unreadCounts };
+
+        switch (type) {
+            case 'add':
+                newCounts[groupId] += num;
+                setUnreadCounts(newCounts);
+                break;
+            case 'zero':
+                newCounts[groupId] = 0;
+                setUnreadCounts(newCounts);
+                break;
+            default:
+                break;
+        }
     }
 
     return (
@@ -85,7 +156,14 @@ function ChatList({ userId }) {
                                         >
                                             <ListItemButton>
                                                 <ListItemIcon>
-                                                    <ChatBubbleOutline />
+                                                    <Badge
+                                                        badgeContent={getCounts(
+                                                            groupMessage._id
+                                                        )}
+                                                        color="error"
+                                                    >
+                                                        <ChatBubbleOutline />
+                                                    </Badge>
                                                 </ListItemIcon>
                                                 <ListItemText
                                                     primary={
@@ -119,7 +197,7 @@ function ChatList({ userId }) {
                 onClick={() => setBigChatList(true)}
                 sx={{ position: 'absolute', bottom: '1rem', right: '10%' }}
             >
-                <Badge badgeContent={groupMessages.length} color="error">
+                <Badge badgeContent={getCounts()} color="error">
                     <ChatBubbleOutline />
                 </Badge>
             </Fab>
