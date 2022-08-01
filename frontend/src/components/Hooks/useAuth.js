@@ -10,12 +10,14 @@ function useAuth() {
             .get(`/api/auth`, { withCredentials: true })
             .then((res) => {
                 setUser(res.data);
-                setIsLoggedIn(true);
             })
-            .catch((err) => {
-                setIsLoggedIn(false);
-            });
+            .catch((err) => {});
     }, []);
+
+    useEffect(() => {
+        setIsLoggedIn(user ? true : false);
+        // console.log({ user });
+    }, [user]);
 
     return {
         user,

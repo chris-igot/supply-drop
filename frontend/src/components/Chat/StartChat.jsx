@@ -1,41 +1,53 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React from 'react';
-import axios from 'axios';
 import { Button, Stack, TextField } from '@mui/material';
+import { useRef } from 'react';
+import { useContext } from 'react';
+import { connectionContext } from '../Contexts/connectionContext';
 
-function StartChat({ recipientId, groupName }) {
+function StartChat({ recipientId, groupName, disabled }) {
+    const { io, ioConnected } = useContext(connectionContext);
+    const messageRef = useRef(null);
+
     function handleSubmit(e) {
         e.preventDefault();
-        let data = new FormData();
+        if (ioConnected) {
+            let newMessageObj = {};
 
-        data.append('users', recipientId);
+            newMessageObj['users'] = [recipientId];
 
-        if (groupName) {
-            data.append('groupName', groupName);
+            if (groupName) {
+                newMessageObj['groupName'] = groupName;
+            }
+            if (messageRef.current.value) {
+                newMessageObj['message'] = messageRef.current.value;
+            }
+
+            io.emit('CREATE_CHAT', newMessageObj);
         }
-        axios
-            .post('/api/message/new', data, {
-                withCredentials: true,
-            })
-            .then((res) => {
-                console.log(res);
-            })
-            .catch((res) => {
-                console.log(res);
-            });
     }
     return (
         <form action="post" onSubmit={handleSubmit}>
             <Stack sx={{ marginRight: '0.5rem' }}>
-                <TextField
-                    id="chat-message"
-                    name="chat-message"
-                    label="message"
-                    multiline
-                    rows={4}
-                    placeholder="say hello"
-                    sx={{ marginBottom: '0.5rem' }}
-                />
-                <Button variant="outlined" type="submit">
+                {disabled ? (
+                    <p>Please Login to send a message</p>
+                ) : (
+                    <TextField
+                        id="chat-message"
+                        name="chat-message"
+                        label="message"
+                        inputRef={messageRef}
+                        multiline
+                        rows={4}
+                        placeholder="say hello"
+                        sx={{ marginBottom: '0.5rem' }}
+                    />
+                )}
+                <Button
+                    disabled={disabled || false}
+                    variant="outlined"
+                    type="submit"
+                >
                     Initiate Chat
                 </Button>
             </Stack>

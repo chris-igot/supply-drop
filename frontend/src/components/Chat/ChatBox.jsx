@@ -1,6 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useState, useEffect, useRef } from 'react';
-import { io } from 'socket.io-client';
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import axios from 'axios';
 import {
     Box,
@@ -14,45 +13,39 @@ import {
 } from '@mui/material';
 import Message from './Message';
 import { Close, Send } from '@mui/icons-material';
+import { connectionContext } from '../Contexts/connectionContext';
 
 const ChatBox = React.forwardRef(
     ({ groupId, userId, index, embiggenChat }, ref) => {
         const [messages, setMessages] = useState([]);
         const [socketMessages, setSocketMessages] = useState([]);
-        const [latestMessage, setLatestMessage] = useState(null);
         const [users, setUsers] = useState({});
         const scrollRef = useRef(null);
-        const socketRef = useRef(
-            io({
-                reconnectionDelayMax: 10000,
-                query: {
-                    groupId,
-                    userId,
-                },
-            })
-        );
+        const { io, latestMessage } = useContext(connectionContext);
+        const joinedRef = useRef(false);
 
         useEffect(() => {
-            axios
-                .get('/api/message/' + groupId, {
-                    withCredentials: true,
-                })
-                .then((res) => {
-                    const groupInfo = res.data[0];
-                    let tempUsers = {};
-                    setMessages(groupInfo.messages);
-                    groupInfo.users.forEach((user) => {
-                        tempUsers[user._id] = user;
+            if (!joinedRef.current) {
+                axios
+                    .get('/api/message/' + groupId, {
+                        withCredentials: true,
+                    })
+                    .then((res) => {
+                        const groupInfo = res.data[0];
+                        let tempUsers = {};
+                        setMessages(groupInfo.messages);
+                        groupInfo.users.forEach((user) => {
+                            tempUsers[user._id] = user;
+                        });
+                        setUsers(tempUsers);
+                        joinedRef.current = true;
+                    })
+                    .catch((err) => {
+                        console.log(err);
                     });
-                    setUsers(tempUsers);
-                    socketRef.current.connect();
-                    socketRef.current.on('message', setLatestMessage);
-                })
-                .catch((err) => {
-                    console.log(err);
-                });
+            }
             return () => {
-                socketRef.current.close();
+                io.emit('LEAVE_CHAT', groupId);
             };
         }, []);
 
@@ -76,10 +69,9 @@ const ChatBox = React.forwardRef(
 
         function handleSend(e) {
             e.preventDefault();
-            // const id = 'textMessage-' + groupId;
             const element = e.target.elements[0];
             const textMessage = element.value;
-            socketRef.current.send(textMessage);
+            io.send({ groupId, message: textMessage });
             element.value = '';
         }
 

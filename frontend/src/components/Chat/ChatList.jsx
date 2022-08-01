@@ -39,7 +39,6 @@ function ChatList({ userId }) {
 
     function embiggen(index, active) {
         let tempGroupMessages = [...groupMessages];
-        console.trace('EMBIGGEN', { index, active });
         tempGroupMessages[index].bigChat = active;
         setGroupMessages(tempGroupMessages);
     }

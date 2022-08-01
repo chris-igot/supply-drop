@@ -124,7 +124,7 @@ module.exports = {
 
     getLoggedUser: (req, res) => {
         const userToken = res.locals.payload;
-        console.log(userToken);
+
         User.findOne(
             { _id: userToken.id },
             '-password -__v -updatedAt -createdAt'

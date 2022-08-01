@@ -1,60 +1,60 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { io } from 'socket.io-client';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import useAuth from '../Hooks/useAuth';
 
 const connectionContext = React.createContext({
     user: undefined,
     userId: undefined,
     token: undefined,
-    isLoggedIn: undefined,
-    setMessageCB: undefined,
-    setStatusCB: undefined,
-    io: io({
-        reconnectionDelayMax: 10000,
-    }),
+    isLoggedIn: false,
+    ioConnected: false,
+    io: undefined,
 });
 
 function ConnectionContextProvider(props) {
     const { user, userId, token, isLoggedIn } = useAuth();
-    const [messageCBState, setMessageCB] = useState((data = 'NO DATA') => {
-        console.log(data);
-    });
-    const [statusCBState, setStatusCB] = useState((data = 'NO DATA') => {
-        console.log(data);
-    });
+    const [latestMessage, setLatestMessage] = useState(null);
+    const [latestStatus, setLatestStatus] = useState(null);
+    const [ioConnected, setIoConnected] = useState(false);
 
     const [ioState, setIO] = useState(
         io({
-            reconnectionDelayMax: 10000,
-            query: {
-                token,
-            },
+            autoConnect: false,
         })
     );
 
     useEffect(() => {
-        if (isLoggedIn) {
+        connect();
+    }, [isLoggedIn, ioState.disconnected]);
+
+    function connect() {
+        // ioState.disconnect();
+        if (isLoggedIn && io && !ioConnected) {
             const newIO = io({
-                reconnectionDelayMax: 10000,
+                autoConnect: false,
                 query: {
+                    userId,
                     token,
                 },
             });
-            setIO(newIO);
             console.log({ isLoggedIn, userId, token });
-
             newIO.connect();
-            newIO.on('message', messageCBState);
-            newIO.on('status', statusCBState);
-            console.log('connected', newIO.connected);
-        } else {
-            if (ioState.connected) {
-                console.log('disconnect here');
-                ioState.disconnect();
-            }
+
+            newIO.on('connect', () => {
+                console.log('CONNECTED', newIO.connected);
+                newIO.on('message', setLatestMessage);
+                newIO.on('status', setLatestStatus);
+                setIoConnected(true);
+            });
+            newIO.on('disconnect', () => {
+                setIoConnected(false);
+                console.log('DISCONNECTED');
+            });
+            setIO(newIO);
         }
-    }, [isLoggedIn, messageCBState, statusCBState]);
+    }
+
     return (
         <connectionContext.Provider
             value={{
@@ -62,9 +62,10 @@ function ConnectionContextProvider(props) {
                 userId,
                 token,
                 isLoggedIn,
-                setMessageCB,
-                setStatusCB,
                 io: ioState,
+                latestMessage,
+                latestStatus,
+                ioConnected,
             }}
         >
             {props.children}

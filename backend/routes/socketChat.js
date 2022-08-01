@@ -2,29 +2,24 @@ const mongoose = require('mongoose');
 const { Message } = require('../models/message.model');
 const { MessageGroup } = require('../models/messageGroup.model');
 const { User } = require('../models/user.model');
+const jwt = require('jsonwebtoken');
 
 module.exports = function (io) {
-    io.on('connection', (socket) => {
-        const userId = socket.handshake.query.userId || false;
-
-        if (!userId) {
-            socket.emit('status', {
-                type: 'connection-fail',
-            });
-            socket.disconnect(true);
-            return;
+    io.on('connection', async (socket) => {
+        let userId;
+        try {
+            const decodedToken = jwt.verify(
+                socket.handshake.query.token,
+                process.env.SECRET_KEY_SUPPLYDROP
+            );
+            userId = decodedToken.id;
+        } catch (error) {
+            socket.disconnect();
         }
-
-        socket.join('user-' + userId);
-
-        socket.emit('status', {
-            type: 'user-connected',
-        });
 
         socket.on('CREATE_CHAT', async (newMessageObj) => {
             let groupName = newMessageObj.groupName || '----';
             let users = newMessageObj.users;
-            console.log('start chat', newMessageObj);
             try {
                 if (users) {
                     if (Array.isArray(users)) {
@@ -72,8 +67,6 @@ module.exports = function (io) {
                         });
                     }
                 });
-
-                console.log('out', newMsgGroup);
             } catch (err) {
                 socket.emit('status', {
                     type: 'user-newmessage-fail',
@@ -81,7 +74,6 @@ module.exports = function (io) {
                 console.log(err);
             }
         });
-
         socket.on('JOIN_CHAT', async (groupId) => {
             let messageGroupDB;
             try {
@@ -89,8 +81,6 @@ module.exports = function (io) {
                     groupId,
                     '-messages'
                 );
-
-                console.log('before', messageGroupDB);
 
                 const userIndex = messageGroupDB.users.findIndex(
                     (userObjectId) => userObjectId.toString() === userId
@@ -100,7 +90,6 @@ module.exports = function (io) {
                     messageGroupDB.userData[userIndex].chatUnseen = false;
                     messageGroupDB.userData[userIndex].messagesUnread = 0;
                     await messageGroupDB.save();
-                    console.log('after', messageGroupDB);
                 } else {
                     throw new Error('User does not exist in this chat group');
                 }
@@ -121,41 +110,6 @@ module.exports = function (io) {
                 data: { userId },
             });
 
-            socket.on('message', async (usrMessageObj) => {
-                try {
-                    const newMsg = await Message.create({
-                        user: userId,
-                        message: usrMessageObj.message,
-                    });
-                    const updatedMsgGroup = await MessageGroup.findOneAndUpdate(
-                        { _id: usrMessageObj.groupId },
-                        { $push: { messages: newMsg._id } },
-                        {
-                            new: true,
-                        }
-                    );
-
-                    await updatedMsgGroup.userData.forEach((userDatum) => {
-                        if (userDatum.userId.toString() !== userId) {
-                            userDatum.messagesUnread++;
-                        }
-                    });
-
-                    await updatedMsgGroup.save();
-
-                    io.to(usrMessageObj.groupId).emit(
-                        'message',
-                        usrMessageObj.message
-                    );
-                    console.log(messageGroupDB._id);
-                } catch (error) {
-                    socket.emit('status', {
-                        type: 'user-message-fail',
-                    });
-                    console.log(error);
-                }
-            });
-
             socket.on('LEAVE_CHAT', (groupId) => {
                 socket.leave(groupId);
                 socket.emit('status', {
@@ -167,6 +121,37 @@ module.exports = function (io) {
                     data: { userId },
                 });
             });
+        });
+
+        socket.on('message', async (usrMessageObj) => {
+            try {
+                const newMsg = await Message.create({
+                    user: userId,
+                    message: usrMessageObj.message,
+                });
+                const updatedMsgGroup = await MessageGroup.findOneAndUpdate(
+                    { _id: usrMessageObj.groupId },
+                    { $push: { messages: newMsg._id } },
+                    {
+                        new: true,
+                    }
+                );
+
+                await updatedMsgGroup.userData.forEach((userDatum) => {
+                    if (userDatum.userId.toString() !== userId) {
+                        userDatum.messagesUnread++;
+                    }
+                });
+
+                await updatedMsgGroup.save();
+
+                io.to(usrMessageObj.groupId).emit('message', newMsg);
+            } catch (error) {
+                socket.emit('status', {
+                    type: 'user-message-fail',
+                });
+                console.log(error);
+            }
         });
     });
 };
