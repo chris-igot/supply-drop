@@ -12,10 +12,11 @@ import {
     Paper,
     Typography,
 } from '@mui/material';
-import useAuth from '../Hooks/useAuth';
+import { useContext } from 'react';
+import { connectionContext } from '../Contexts/connectionContext';
 
 const HomePosts = ({ ownPosts }) => {
-    const { user, isLoggedIn } = useAuth();
+    const { user, isLoggedIn } = useContext(connectionContext);
     const [posts, setPosts] = useState([]);
 
     useEffect(() => {

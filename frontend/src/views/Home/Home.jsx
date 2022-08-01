@@ -6,11 +6,12 @@ import ChatList from '../../components/Chat/ChatList';
 import { Modal, Stack } from '@mui/material';
 import { HomeNewPostBar } from '../../components/Home/HomeNewPostBar';
 import { pageContainerStyle } from '../common/style';
-import useAuth from '../../components/Hooks/useAuth';
+import { useContext } from 'react';
+import { connectionContext } from '../../components/Contexts/connectionContext';
 
 const Home = () => {
     const [bigForm, setBigForm] = useState(false);
-    const { user } = useAuth();
+    const { user } = useContext(connectionContext);
 
     return (
         <>
