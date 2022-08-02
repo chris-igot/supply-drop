@@ -4,6 +4,7 @@ import axios from 'axios';
 import ChatBox from './ChatBox';
 import {
     Badge,
+    Divider,
     Fab,
     Grid,
     List,
@@ -13,6 +14,7 @@ import {
     ListItemText,
     Modal,
     Paper,
+    Typography,
 } from '@mui/material';
 import { ChatBubbleOutline, Close } from '@mui/icons-material';
 import { useContext } from 'react';
@@ -125,6 +127,7 @@ function ChatList({ userId }) {
                 <Paper
                     elevation={6}
                     sx={{
+                        padding: '1em',
                         maxWidth: '600px',
                         maxHeight: '80%',
                         position: 'absolute',
@@ -135,7 +138,9 @@ function ChatList({ userId }) {
                 >
                     <Grid container>
                         <Grid item xs={12}>
-                            {' '}
+                            <Typography variant="h6" sx={{ float: 'left' }}>
+                                Conversations
+                            </Typography>
                             <Close
                                 sx={{ float: 'right', cursor: 'pointer' }}
                                 onClick={() => {
@@ -144,6 +149,7 @@ function ChatList({ userId }) {
                             />
                         </Grid>
                         <Grid item xs={12}>
+                            <Divider sx={{ marginBlock: '0.5em' }} />
                             <List>
                                 {groupMessages.map((groupMessage, index) => (
                                     <React.Fragment key={index}>
@@ -154,8 +160,10 @@ function ChatList({ userId }) {
                                             }}
                                             sx={{ cursor: 'pointer' }}
                                         >
-                                            <ListItemButton>
-                                                <ListItemIcon>
+                                            <ListItemButton sx={{ padding: 0 }}>
+                                                <ListItemIcon
+                                                    sx={{ minWidth: '32px' }}
+                                                >
                                                     <Badge
                                                         badgeContent={getCounts(
                                                             groupMessage._id
@@ -166,12 +174,9 @@ function ChatList({ userId }) {
                                                     </Badge>
                                                 </ListItemIcon>
                                                 <ListItemText
-                                                    primary={
-                                                        'Conversation with:' +
-                                                        getOtherUser(
-                                                            groupMessage
-                                                        )
-                                                    }
+                                                    primary={getOtherUser(
+                                                        groupMessage
+                                                    )}
                                                 />
                                             </ListItemButton>
                                         </ListItem>
@@ -195,11 +200,18 @@ function ChatList({ userId }) {
                 color="primary"
                 aria-label="add"
                 onClick={() => setBigChatList(true)}
-                sx={{ position: 'absolute', bottom: '1rem', right: '10%' }}
+                sx={{ position: 'fixed', bottom: '1rem', right: '10%' }}
             >
                 <Badge badgeContent={getCounts()} color="error">
-                    <ChatBubbleOutline />
+                    <ChatBubbleOutline
+                        fontSize="large"
+                        style={{ position: 'relative', top: '2px' }}
+                    />
                 </Badge>
+
+                <span style={{ position: 'absolute', bottom: '32%' }}>
+                    {groupMessages.length || ''}
+                </span>
             </Fab>
         </>
     );
