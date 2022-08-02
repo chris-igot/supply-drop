@@ -66,9 +66,16 @@ module.exports = function (io) {
                     userData,
                 });
 
-                io.to(groupId).emit('status', {
+                users.forEach((oneUserId) => {
+                    socket.to('userId-' + oneUserId).emit('status', {
+                        type: 'chat-created',
+                        data: { groupId: newMsgGroup._id },
+                    });
+                });
+
+                socket.emit('status', {
                     type: 'chat-created',
-                    data: { groupId: usrMessageObj.groupId },
+                    data: { groupId: newMsgGroup._id },
                 });
             } catch (err) {
                 socket.emit('status', {
