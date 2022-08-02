@@ -10,7 +10,7 @@ import { connectionContext } from '../Contexts/connectionContext';
 
 const UserForm = React.forwardRef(({ mode, embiggenForm, ...props }, ref) => {
     const navigate = useNavigate();
-    const { user, isLoggedIn } = useContext(connectionContext);
+    const { user, isLoggedIn, updateUser } = useContext(connectionContext);
     const [errors, setErrors] = useState({});
     const [modeState, setModeState] = useState(mode);
     const [OkToRender, setOkToRender] = useState(false);
@@ -78,7 +78,8 @@ const UserForm = React.forwardRef(({ mode, embiggenForm, ...props }, ref) => {
                         withCredentials: true,
                     })
                     .then((res) => {
-                        navigate('/');
+                        updateUser();
+                        embiggenForm(false);
                     })
                     .catch((err) => {
                         const errResData = err.response.data.errors;
