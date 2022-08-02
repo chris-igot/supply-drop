@@ -17,7 +17,7 @@ import AutoCompleteLocations from './AutocompleteLocations';
 import { Close } from '@mui/icons-material';
 
 const PostForm = React.forwardRef((props, ref) => {
-    const { userID, postID, embiggenForm, index } = props;
+    const { postID, embiggenForm, index } = props;
     const [postInfo, setPostInfo] = useState({});
     const [errors, setErrors] = useState('');
     const [OkToRender, setOkToRender] = useState(false);
@@ -93,8 +93,6 @@ const PostForm = React.forwardRef((props, ref) => {
                     return errors;
                 });
         } else {
-            data.append('postedBy', userID);
-
             axios
                 .post(`/api/post/new`, data, {
                     withCredentials: true,
