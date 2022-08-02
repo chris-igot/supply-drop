@@ -1,19 +1,19 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { Button, Container, Grid, Paper, Typography } from '@mui/material';
 import logo from '../../assets/logo.webp';
 import TextField from './TextField';
-import { useRef } from 'react';
 import { Close } from '@mui/icons-material';
+import { connectionContext } from '../Contexts/connectionContext';
 
 const UserForm = React.forwardRef(({ mode, embiggenForm, ...props }, ref) => {
     const navigate = useNavigate();
+    const { user, isLoggedIn } = useContext(connectionContext);
     const [errors, setErrors] = useState({});
     const [modeState, setModeState] = useState(mode);
     const [OkToRender, setOkToRender] = useState(false);
-    const userRef = useRef({});
 
     useEffect(() => {
         switch (modeState) {
@@ -22,16 +22,10 @@ const UserForm = React.forwardRef(({ mode, embiggenForm, ...props }, ref) => {
                 setOkToRender(true);
                 break;
             case 'edit':
-                axios
-                    .get('/api/auth', {
-                        withCredentials: true,
-                    })
-                    .then((res) => {
-                        userRef.current = res.data;
-                        // setUser(res.data);
-                        setOkToRender(true);
-                    })
-                    .catch((err) => console.log(err));
+                if (isLoggedIn) {
+                    setOkToRender(true);
+                }
+
                 break;
             default:
                 return;
@@ -77,7 +71,7 @@ const UserForm = React.forwardRef(({ mode, embiggenForm, ...props }, ref) => {
                     });
                 break;
             case 'edit':
-                url = `/api/user/${userRef.current._id}`;
+                url = `/api/user/${isLoggedIn ? user._id : ''}`;
 
                 axios
                     .put(url, data, {
@@ -218,7 +212,7 @@ const UserForm = React.forwardRef(({ mode, embiggenForm, ...props }, ref) => {
                             name={'firstName'}
                             label={'First Name'}
                             defaultValue={
-                                userRef.current.firstName || undefined
+                                isLoggedIn ? user.firstName : undefined
                             }
                             errorMessage={renderErrorMessage('firstName')}
                         />
@@ -230,7 +224,9 @@ const UserForm = React.forwardRef(({ mode, embiggenForm, ...props }, ref) => {
                             }
                             name={'lastName'}
                             label={'Last Name'}
-                            defaultValue={userRef.current.lastName || undefined}
+                            defaultValue={
+                                isLoggedIn ? user.lastName : undefined
+                            }
                             errorMessage={renderErrorMessage('lastName')}
                         />
                         <TextField
@@ -241,14 +237,16 @@ const UserForm = React.forwardRef(({ mode, embiggenForm, ...props }, ref) => {
                             }
                             name={'username'}
                             label={'Username'}
-                            defaultValue={userRef.current.username || undefined}
+                            defaultValue={
+                                isLoggedIn ? user.username : undefined
+                            }
                             errorMessage={renderErrorMessage('username')}
                         />
                         <TextField
                             OkToRender={OkToRender}
                             name={'email'}
                             label={'Email'}
-                            defaultValue={userRef.current.email || undefined}
+                            defaultValue={isLoggedIn ? user.email : undefined}
                             errorMessage={renderErrorMessage('email')}
                         />
                         <TextField
