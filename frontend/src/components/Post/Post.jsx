@@ -87,10 +87,7 @@ const Post = React.forwardRef(
                         <Typography variant="overline" component="h6">
                             Chat
                         </Typography>
-                        <StartChat
-                            disabled={!isLoggedIn}
-                            recipientId={postedBy._id}
-                        />
+                        <StartChat recipientId={postedBy._id} />
                     </Grid>
                     <Grid item xs={6}>
                         <Typography variant="overline" component="h6">

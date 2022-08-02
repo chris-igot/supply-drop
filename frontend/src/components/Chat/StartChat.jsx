@@ -5,8 +5,9 @@ import { useRef } from 'react';
 import { useContext } from 'react';
 import { connectionContext } from '../Contexts/connectionContext';
 
-function StartChat({ recipientId, groupName, disabled }) {
-    const { io, ioConnected } = useContext(connectionContext);
+function StartChat({ recipientId, groupName }) {
+    const { io, ioConnected, isLoggedIn, userId } =
+        useContext(connectionContext);
     const messageRef = useRef(null);
 
     function handleSubmit(e) {
@@ -26,25 +27,32 @@ function StartChat({ recipientId, groupName, disabled }) {
             io.emit('CREATE_CHAT', newMessageObj);
         }
     }
+
     return (
         <form action="post" onSubmit={handleSubmit}>
             <Stack sx={{ marginRight: '0.5rem' }}>
-                {disabled ? (
-                    <p>Please Login to send a message</p>
+                {isLoggedIn ? (
+                    <>
+                        {recipientId === userId ? (
+                            <p>This is your own post</p>
+                        ) : (
+                            <TextField
+                                id="chat-message"
+                                name="chat-message"
+                                label="message"
+                                inputRef={messageRef}
+                                multiline
+                                rows={4}
+                                placeholder="say hello"
+                                sx={{ marginBottom: '0.5rem' }}
+                            />
+                        )}
+                    </>
                 ) : (
-                    <TextField
-                        id="chat-message"
-                        name="chat-message"
-                        label="message"
-                        inputRef={messageRef}
-                        multiline
-                        rows={4}
-                        placeholder="say hello"
-                        sx={{ marginBottom: '0.5rem' }}
-                    />
+                    <p>Please Login to send a message</p>
                 )}
                 <Button
-                    disabled={disabled || false}
+                    disabled={!isLoggedIn || recipientId === userId}
                     variant="outlined"
                     type="submit"
                 >
