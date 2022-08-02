@@ -3,9 +3,11 @@ const { Post } = require('../models/post.model');
 module.exports = {
     createPost: async (req, res) => {
         try {
-            console.log('here');
+            const userToken = res.locals.payload;
             const file = req.file;
             let post = req.body;
+
+            post.postedBy = userToken.id;
 
             if (file) {
                 post.image = file.filename;
