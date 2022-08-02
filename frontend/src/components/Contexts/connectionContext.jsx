@@ -13,7 +13,7 @@ const connectionContext = React.createContext({
 });
 
 function ConnectionContextProvider(props) {
-    const { user, userId, token, isLoggedIn } = useAuth();
+    const { user, userId, token, isLoggedIn, updateUser } = useAuth();
     const [latestMessage, setLatestMessage] = useState(null);
     const [latestStatus, setLatestStatus] = useState(null);
     const [ioConnected, setIoConnected] = useState(false);
@@ -29,8 +29,7 @@ function ConnectionContextProvider(props) {
     }, [isLoggedIn, ioState.disconnected]);
 
     function connect() {
-        // ioState.disconnect();
-        if (isLoggedIn && io && !ioConnected) {
+        if (isLoggedIn && ioState && !ioConnected) {
             const newIO = io({
                 autoConnect: false,
                 query: {
@@ -38,7 +37,6 @@ function ConnectionContextProvider(props) {
                     token,
                 },
             });
-            console.log({ isLoggedIn, userId, token });
             newIO.connect();
 
             newIO.on('connect', () => {
@@ -62,6 +60,7 @@ function ConnectionContextProvider(props) {
                 userId,
                 token,
                 isLoggedIn,
+                updateUser,
                 io: ioState,
                 latestMessage,
                 latestStatus,

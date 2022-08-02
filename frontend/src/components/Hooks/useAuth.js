@@ -6,24 +6,28 @@ function useAuth() {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
 
     useEffect(() => {
+        updateUser();
+    }, []);
+
+    useEffect(() => {
+        setIsLoggedIn(user ? true : false);
+    }, [user]);
+
+    function updateUser() {
         axios
             .get(`/api/auth`, { withCredentials: true })
             .then((res) => {
                 setUser(res.data);
             })
             .catch((err) => {});
-    }, []);
-
-    useEffect(() => {
-        setIsLoggedIn(user ? true : false);
-        // console.log({ user });
-    }, [user]);
+    }
 
     return {
         user,
         isLoggedIn,
         userId: user ? user._id : undefined,
         token: user ? user.token : undefined,
+        updateUser,
     };
 }
 
