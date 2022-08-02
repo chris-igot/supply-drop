@@ -87,7 +87,10 @@ const Post = React.forwardRef(
                         <Typography variant="overline" component="h6">
                             Chat
                         </Typography>
-                        <StartChat recipientId={postedBy._id} />
+                        <StartChat
+                            recipientId={postedBy._id}
+                            closeForm={() => embiggenForm(index, false, 'post')}
+                        />
                     </Grid>
                     <Grid item xs={6}>
                         <Typography variant="overline" component="h6">

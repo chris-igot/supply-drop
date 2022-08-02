@@ -5,7 +5,7 @@ import { useRef } from 'react';
 import { useContext } from 'react';
 import { connectionContext } from '../Contexts/connectionContext';
 
-function StartChat({ recipientId, groupName }) {
+function StartChat({ recipientId, groupName, closeForm }) {
     const { io, ioConnected, isLoggedIn, userId } =
         useContext(connectionContext);
     const messageRef = useRef(null);
@@ -25,6 +25,7 @@ function StartChat({ recipientId, groupName }) {
             }
 
             io.emit('CREATE_CHAT', newMessageObj);
+            closeForm();
         }
     }
 
