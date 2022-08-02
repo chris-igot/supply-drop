@@ -14,6 +14,7 @@ import {
     ListItemText,
     Modal,
     Paper,
+    Snackbar,
     Typography,
 } from '@mui/material';
 import { ChatBubbleOutline, Close } from '@mui/icons-material';
@@ -25,19 +26,24 @@ function ChatList({ userId }) {
     const [bigChatList, setBigChatList] = useState(false);
     const [unreadCounts, setUnreadCounts] = useState({});
     const { latestStatus } = useContext(connectionContext);
+    const [notificationOpen, setNotificationOpen] = useState(false);
+    const [notificationMessage, setNotificationMessage] = useState('');
 
     useEffect(() => {
         updateGroupMessages();
     }, []);
 
     useEffect(() => {
-        console.log({ latestStatus });
         if (latestStatus) {
+            console.log({ latestStatus });
             switch (latestStatus.type) {
                 case 'message-received':
                     setCount(latestStatus.data.groupId, 'add');
                     break;
                 case 'chat-created':
+                    console.log('chat created');
+                    setNotificationMessage('New Chat Created');
+                    setNotificationOpen(true);
                     updateGroupMessages();
                     break;
                 default:
@@ -92,7 +98,7 @@ function ChatList({ userId }) {
 
     function getCounts(groupId = 'all') {
         let count = 0;
-        console.log({ unreadCounts, groupMessages });
+
         if (groupId === 'all') {
             for (const id in unreadCounts) {
                 count += unreadCounts[id];
@@ -208,11 +214,21 @@ function ChatList({ userId }) {
                         style={{ position: 'relative', top: '2px' }}
                     />
                 </Badge>
-
-                <span style={{ position: 'absolute', bottom: '32%' }}>
+                <Typography
+                    variant="subtitle2"
+                    style={{ position: 'absolute', bottom: '29%' }}
+                >
                     {groupMessages.length || ''}
-                </span>
+                </Typography>
             </Fab>
+            <Snackbar
+                open={notificationOpen}
+                autoHideDuration={3000}
+                message={notificationMessage}
+                onClose={() => {
+                    setNotificationOpen(false);
+                }}
+            />
         </>
     );
 }
