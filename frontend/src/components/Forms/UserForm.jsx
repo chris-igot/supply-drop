@@ -56,6 +56,7 @@ const UserForm = React.forwardRef(({ mode, embiggenForm, ...props }, ref) => {
                     })
                     .then((res) => {
                         updateUser();
+                        embiggenForm(false);
                     })
                     .catch((err) => {
                         const errResData = err.response.data.errors;
@@ -95,6 +96,7 @@ const UserForm = React.forwardRef(({ mode, embiggenForm, ...props }, ref) => {
 
                     .then((res) => {
                         updateUser();
+                        embiggenForm(false);
                     })
                     .catch((err) => {
                         setErrors({ password: 'Bad email or password' });
