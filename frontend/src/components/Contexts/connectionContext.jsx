@@ -64,7 +64,9 @@ function ConnectionContextProvider(props) {
                 updateUser,
                 io: ioState,
                 latestMessage,
+                setLatestMessage,
                 latestStatus,
+                setLatestStatus,
                 ioConnected,
             }}
         >

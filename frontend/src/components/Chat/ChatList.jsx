@@ -25,12 +25,16 @@ function ChatList({ userId }) {
     const [groupMessages, setGroupMessages] = useState([]);
     const [bigChatList, setBigChatList] = useState(false);
     const [unreadCounts, setUnreadCounts] = useState({});
-    const { latestStatus } = useContext(connectionContext);
+    const { latestStatus, setLatestStatus } = useContext(connectionContext);
     const [notificationOpen, setNotificationOpen] = useState(false);
     const [notificationMessage, setNotificationMessage] = useState('');
 
     useEffect(() => {
         updateGroupMessages();
+
+        return () => {
+            setLatestStatus(null);
+        };
     }, []);
 
     useEffect(() => {

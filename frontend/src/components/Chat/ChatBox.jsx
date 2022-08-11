@@ -19,9 +19,10 @@ const ChatBox = React.forwardRef(
     ({ groupId, userId, index, embiggenChat }, ref) => {
         const [messages, setMessages] = useState([]);
         const [socketMessages, setSocketMessages] = useState([]);
-        const [users, setUsers] = useState({});
+        const [users, setUsers] = useState({ a: 'default' });
         const scrollRef = useRef(null);
-        const { io, latestMessage } = useContext(connectionContext);
+        const { io, latestMessage, setLatestMessage, setLatestStatus } =
+            useContext(connectionContext);
         const joinedRef = useRef(false);
 
         useEffect(() => {
@@ -38,6 +39,7 @@ const ChatBox = React.forwardRef(
                         groupInfo.users.forEach((user) => {
                             tempUsers[user._id] = user;
                         });
+                        console.log({ groupInfo });
                         setUsers(tempUsers);
                         joinedRef.current = true;
                     })
@@ -45,8 +47,11 @@ const ChatBox = React.forwardRef(
                         console.log(err);
                     });
             }
+
             return () => {
                 io.emit('LEAVE_CHAT', groupId);
+                setLatestMessage(null);
+                setLatestStatus(null);
             };
         }, []);
 
@@ -59,15 +64,11 @@ const ChatBox = React.forwardRef(
         useEffect(() => {
             console.log({ latestMessage });
             if (latestMessage) {
-                appendMessage(latestMessage);
+                let tempMessages = [...socketMessages, latestMessage];
+
+                setSocketMessages(tempMessages);
             }
         }, [latestMessage]);
-
-        function appendMessage(messageObject) {
-            let tempMessages = [...socketMessages, messageObject];
-
-            setSocketMessages(tempMessages);
-        }
 
         function handleSend(e) {
             e.preventDefault();
@@ -126,6 +127,7 @@ const ChatBox = React.forwardRef(
                     <Grid container>
                         {messages.map((messageObject, index) => {
                             const user = users[messageObject.user];
+                            console.log({ users });
                             const isSelf = user._id === userId;
                             return (
                                 <Message
@@ -138,6 +140,7 @@ const ChatBox = React.forwardRef(
                         })}
                         {socketMessages.map((messageObject, index) => {
                             const user = users[messageObject.user];
+                            console.log({ users });
                             const isSelf = user._id === userId;
                             return (
                                 <Message
