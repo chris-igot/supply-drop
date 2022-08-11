@@ -23,6 +23,7 @@ module.exports = {
         const userToken = jwt.sign(
             {
                 id: user._id,
+                roles: user.roles,
             },
             process.env.SECRET_KEY_SUPPLYDROP
         );
@@ -35,14 +36,18 @@ module.exports = {
     register: async (req, res) => {
         try {
             let user = req.body;
+
             if (user.password != user.confirmPassword) {
                 throw new Error('pw-missmatch');
             }
+
+            user.roles = ['user'];
             const newuser = await User.create(user).then((user) => {
                 console.log('HERE');
                 const userToken = jwt.sign(
                     {
                         id: user._id,
+                        roles: user.roles,
                     },
                     process.env.SECRET_KEY_SUPPLYDROP
                 );
@@ -123,15 +128,16 @@ module.exports = {
     },
 
     getLoggedUser: (req, res) => {
-        const userToken = res.locals.payload;
+        const userTokenData = res.locals.payload;
 
         User.findOne(
-            { _id: userToken.id },
+            { _id: userTokenData.id },
             '-password -__v -updatedAt -createdAt'
         )
             .then((loggedUser) => {
                 res.json({
                     token: req.cookies.usertoken,
+                    roles: userTokenData.roles,
                     ...loggedUser.toJSON(),
                 });
             })

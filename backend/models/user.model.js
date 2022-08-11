@@ -33,6 +33,8 @@ let UserSchema = new Schema(
             minlength: [8, 'Password must be at least 8 characters long'],
         },
 
+        roles: [{ type: String }],
+
         messageGroups: [{ type: mongoose.Types.ObjectId, ref: 'MessageGroup' }],
     },
     { timestamps: true }

@@ -2,8 +2,10 @@ const UserController = require('../controllers/users.controller');
 const PostController = require('../controllers/posts.controller');
 const MessageController = require('../controllers/messages.controller');
 const PlaceController = require('../controllers/places.controller');
+const AdminController = require('../controllers/admin.controller');
 const { authenticate } = require('../configs/jwt.config');
 const multer = require('multer');
+const { adminCheck } = require('../middlewares/adminCheck');
 const formdataParser = multer({ dest: 'uploads/' });
 
 module.exports = function (app) {
@@ -57,5 +59,31 @@ module.exports = function (app) {
         '/api/place/search',
         authenticate,
         PlaceController.getAutocompleteResult
+    );
+
+    //Admin
+    app.get(
+        '/api/admin/collection',
+        authenticate,
+        adminCheck,
+        AdminController.getCollections
+    );
+    app.get(
+        '/api/admin/collection/:modelName',
+        authenticate,
+        adminCheck,
+        AdminController.getOneCollection
+    );
+    app.get(
+        '/api/admin/collection/:modelName/:docId',
+        authenticate,
+        adminCheck,
+        AdminController.getOneDocument
+    );
+    app.delete(
+        '/api/admin/collection/:modelName/:docId',
+        authenticate,
+        adminCheck,
+        AdminController.deleteOneDocument
     );
 };

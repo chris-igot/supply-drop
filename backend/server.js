@@ -11,8 +11,6 @@ const io = require('socket.io')(server, {
         methods: ['GET', 'POST'],
     },
 });
-// const io = new Server(server);
-const jwt = require('jsonwebtoken');
 
 require('./configs/mongoose.configs');
 app.use(cors({ credentials: true, origin: process.env.PUBLIC_URL_SUPPLYDROP }));
@@ -25,7 +23,6 @@ require('./routes/socketChat')(io);
 
 const port = process.env.PORT_SUPPLYDROP;
 
-// app.listen(port, () => console.log(`Listening on port: ${port}`));
 server.listen(port, () => {
     console.log(`Listening on port: ${port}`);
 });
