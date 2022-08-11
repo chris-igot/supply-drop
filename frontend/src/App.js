@@ -4,6 +4,8 @@ import Home from './views/Home/Home';
 import UserDetail from './views/UserAccount/UserAccount';
 import { Container } from '@mui/material';
 import ConnectionContextProvider from './components/Contexts/connectionContext';
+import CollectionPage from './views/Admin/CollectionPage';
+import CollectionListPage from './views/Admin/CollectionListPage';
 
 function App() {
     return (
@@ -11,11 +13,16 @@ function App() {
             <Container component="div" className="App" maxWidth="md">
                 <BrowserRouter>
                     <Routes>
-                        <Route path="/" element={<Home />}></Route>
+                        <Route path="/" element={<Home />} />
+                        <Route path="/account/:id" element={<UserDetail />} />
                         <Route
-                            path="/account/:id"
-                            element={<UserDetail />}
-                        ></Route>
+                            path="/admin/collection/:collectionName"
+                            element={<CollectionPage />}
+                        />
+                        <Route
+                            path="/admin/"
+                            element={<CollectionListPage />}
+                        />
                     </Routes>
                 </BrowserRouter>
             </Container>

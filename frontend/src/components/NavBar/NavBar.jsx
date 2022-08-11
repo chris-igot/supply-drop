@@ -82,35 +82,42 @@ const NavBar = ({ user }) => {
                             Account
                         </Button>
                     )}
+                    {user && user.roles.includes('administrator') && (
+                        <Button
+                            component={RouterLink}
+                            to={'/admin'}
+                            sx={{ color: 'white' }}
+                        >
+                            View Collections
+                        </Button>
+                    )}
                     {user ? (
-                        <>
-                            <Button
-                                variant="outlined"
-                                sx={{
-                                    color: 'white',
-                                    borderColor: 'white',
-                                }}
-                                onClick={(e) => {
-                                    e.preventDefault();
+                        <Button
+                            variant="outlined"
+                            sx={{
+                                color: 'white',
+                                borderColor: 'white',
+                            }}
+                            onClick={(e) => {
+                                e.preventDefault();
 
-                                    axios
-                                        .post(
-                                            '/api/user/logout',
-                                            {},
-                                            { withCredentials: true }
-                                        )
-                                        .then((res) => {
-                                            console.log(res);
-                                            navigate('/');
-                                            window.location.reload();
-                                            console.log('you are logged out');
-                                        })
-                                        .catch((err) => console.log(err));
-                                }}
-                            >
-                                Logout
-                            </Button>
-                        </>
+                                axios
+                                    .post(
+                                        '/api/user/logout',
+                                        {},
+                                        { withCredentials: true }
+                                    )
+                                    .then((res) => {
+                                        console.log(res);
+                                        navigate('/');
+                                        window.location.reload();
+                                        console.log('you are logged out');
+                                    })
+                                    .catch((err) => console.log(err));
+                            }}
+                        >
+                            Logout
+                        </Button>
                     ) : (
                         <>
                             <Button

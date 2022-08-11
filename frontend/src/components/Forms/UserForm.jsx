@@ -1,7 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState, useContext } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
 import { Button, Container, Grid, Paper, Typography } from '@mui/material';
 import logo from '../../assets/logo.webp';
 import TextField from './TextField';
@@ -9,7 +8,6 @@ import { Close } from '@mui/icons-material';
 import { connectionContext } from '../Contexts/connectionContext';
 
 const UserForm = React.forwardRef(({ mode, embiggenForm, ...props }, ref) => {
-    const navigate = useNavigate();
     const { user, isLoggedIn, updateUser } = useContext(connectionContext);
     const [errors, setErrors] = useState({});
     const [modeState, setModeState] = useState(mode);
@@ -57,8 +55,7 @@ const UserForm = React.forwardRef(({ mode, embiggenForm, ...props }, ref) => {
                         withCredentials: true,
                     })
                     .then((res) => {
-                        navigate('/');
-                        window.location.reload();
+                        updateUser();
                     })
                     .catch((err) => {
                         const errResData = err.response.data.errors;
@@ -97,8 +94,7 @@ const UserForm = React.forwardRef(({ mode, embiggenForm, ...props }, ref) => {
                     .post('/api/user/login', data)
 
                     .then((res) => {
-                        navigate('/');
-                        window.location.reload();
+                        updateUser();
                     })
                     .catch((err) => {
                         setErrors({ password: 'Bad email or password' });

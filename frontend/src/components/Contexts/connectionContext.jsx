@@ -13,7 +13,7 @@ const connectionContext = React.createContext({
 });
 
 function ConnectionContextProvider(props) {
-    const { user, userId, token, isLoggedIn, updateUser } = useAuth();
+    const { user, userId, token, isLoggedIn, isAdmin, updateUser } = useAuth();
     const [latestMessage, setLatestMessage] = useState(null);
     const [latestStatus, setLatestStatus] = useState(null);
     const [ioConnected, setIoConnected] = useState(false);
@@ -60,6 +60,7 @@ function ConnectionContextProvider(props) {
                 userId,
                 token,
                 isLoggedIn,
+                isAdmin,
                 updateUser,
                 io: ioState,
                 latestMessage,
