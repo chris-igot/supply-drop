@@ -137,7 +137,6 @@ module.exports = {
             .then((loggedUser) => {
                 res.json({
                     token: req.cookies.usertoken,
-                    roles: userTokenData.roles,
                     ...loggedUser.toJSON(),
                 });
             })
