@@ -2,7 +2,8 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import Post from '../Post/Post';
 import PostForm from '../Forms/PostForm';
-import { Edit, DeleteForever, PinDrop } from '@mui/icons-material';
+import { Edit, Place } from '@mui/icons-material';
+import DeleteConfirm from '../Forms/DeleteConfirm';
 import {
     Box,
     Chip,
@@ -125,7 +126,7 @@ const HomePosts = ({ ownPosts }) => {
                                         fontSize: '13px',
                                     }}
                                 >
-                                    <PinDrop
+                                    <Place
                                         sx={{
                                             position: 'relative',
                                             top: '3px',
@@ -138,6 +139,18 @@ const HomePosts = ({ ownPosts }) => {
                             <Grid item xs={2}>
                                 {user && post.postedBy._id === user._id && (
                                     <Box>
+                                        <DeleteConfirm
+                                            confirmMessage={`Are you sure you want to delete Post(${post.title})?`}
+                                            onClick={() => {
+                                                handleDelete(post._id);
+                                            }}
+                                            sx={{
+                                                marginLeft: '0.5rem',
+                                                float: 'right',
+                                                cursor: 'pointer',
+                                            }}
+                                        />
+
                                         <Edit
                                             onClick={() => {
                                                 embiggenComponent(
@@ -145,16 +158,6 @@ const HomePosts = ({ ownPosts }) => {
                                                     true,
                                                     'edit'
                                                 );
-                                            }}
-                                            sx={{
-                                                float: 'right',
-                                                cursor: 'pointer',
-                                            }}
-                                        />
-
-                                        <DeleteForever
-                                            onClick={() => {
-                                                handleDelete(post._id);
                                             }}
                                             sx={{
                                                 float: 'right',
