@@ -40,4 +40,7 @@ services:
       ADMIN_DEFAULTEMAIL: {{your ADMIN_DEFAULTEMAIL value}}
 ```
 
-Note: Make sure to use `authSource` in the mongodb path
+Notes:
+
+-   Make sure to use `authSource` in `MONGODB_PATH`.
+-   A volume is created for `/app/uploads`
