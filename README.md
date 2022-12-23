@@ -42,5 +42,5 @@ services:
 
 Notes:
 
--   Make sure to use `authSource` in `MONGODB_PATH`.
+-   Make sure to use `authSource` in `MONGODB_PATH`
 -   A volume is created for `/app/uploads`
