@@ -13,8 +13,6 @@ mongoose
     .then(() => {
         User.findOne({ username: 'admin' })
             .then(async (user) => {
-                const defaultPW = 'Password1!';
-
                 if (!user) {
                     console.log('No admin account. Creating...');
                     const newAdmin = {
@@ -29,7 +27,12 @@ mongoose
                         console.log('Admin account created.');
                     });
                 } else {
-                    if (bcrypt.compareSync(defaultPW, user.password)) {
+                    if (
+                        bcrypt.compareSync(
+                            process.env.ADMIN_DEFAULTPW,
+                            user.password
+                        )
+                    ) {
                         console.log(
                             'WARNING: Admin default password in use. Please change admin password!'
                         );
