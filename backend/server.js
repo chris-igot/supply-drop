@@ -21,8 +21,6 @@ app.use('/img/', express.static(__dirname + '/uploads'));
 require('./routes/supply_drop.routes')(app);
 require('./routes/socketChat')(io);
 
-const port = process.env.PORT_SUPPLYDROP;
-
-server.listen(port, () => {
-    console.log(`Listening on port: ${port}`);
+server.listen(process.env.PORT, () => {
+    console.log(`Listening on port: ${process.env.PORT}`);
 });

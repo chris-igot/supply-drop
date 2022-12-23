@@ -2,11 +2,13 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const { User } = require('../models/user.model');
 
+mongoose.set('strictQuery', true);
+mongoose.set('autoIndex', true);
+
 mongoose
-    .connect('mongodb://127.0.0.1:27017/Supply_Drop_db', {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-        autoIndex: true,
+    .connect('mongodb://localhost:27017/Supply_Drop_db?authSource=admin', {
+        user: process.env.MONGODB_USER,
+        pass: process.env.MONGODB_PW,
     })
     .then(() => {
         User.findOne({ username: 'admin' })
@@ -19,8 +21,8 @@ mongoose
                         firstName: 'admin',
                         lastName: 'admin',
                         username: 'admin',
-                        email: 'admin@a.com',
-                        password: defaultPW,
+                        email: process.env.ADMIN_DEFAULTEMAIL,
+                        password: process.env.ADMIN_DEFAULTPW,
                         roles: ['administrator'],
                     };
                     User.create(newAdmin).then(() => {
