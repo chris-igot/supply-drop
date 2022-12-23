@@ -6,7 +6,7 @@ mongoose.set('strictQuery', true);
 mongoose.set('autoIndex', true);
 
 mongoose
-    .connect('mongodb://localhost:27017/Supply_Drop_db?authSource=admin', {
+    .connect(process.env.MONGODB_PATH, {
         user: process.env.MONGODB_USER,
         pass: process.env.MONGODB_PW,
     })
@@ -42,6 +42,6 @@ mongoose
             .catch((err) => console.log(err));
         console.log('Established a connection to the database');
     })
-    .catch((err) =>
-        console.log('Somthing went wrong when connecting to the database', err)
-    );
+    .catch((err) => {
+        throw err;
+    });
