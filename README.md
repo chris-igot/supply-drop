@@ -39,3 +39,5 @@ services:
       ADMIN_DEFAULTPW: {{your ADMIN_DEFAULTPW value}}
       ADMIN_DEFAULTEMAIL: {{your ADMIN_DEFAULTEMAIL value}}
 ```
+
+Note: Make sure to use `authSource` in the mongodb path
