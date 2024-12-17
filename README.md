@@ -2,7 +2,6 @@
 
 This app is a MERN(+socket.io) implementation of a classifieds column.  
 Note: This is a detached fork of a submission from a hackathon ([https://github.com/CD-hackathon/supply-drop](https://github.com/CD-hackathon/supply-drop)) where I worked on the chat, autocomplete, and submission forms. In comparison to the original, fork now fully uses MaterialUI for the frontend, fixes security issues, has improved chat feature, and incorporates an admin account.  
-Deployed here: [https://supply-drop.chris-igot.link/](https://supply-drop.chris-igot.link/)  
 Docker: [https://hub.docker.com/repository/docker/chrisigot/supply-drop](https://hub.docker.com/repository/docker/chrisigot/supply-drop)
 
 ## Setup
